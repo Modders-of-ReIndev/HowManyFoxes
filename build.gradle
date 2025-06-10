@@ -30,6 +30,7 @@ foxloader {
     modId = "hmf"
     modName = "HowManyFoxes"
     modIcon = "assets/hmf/modmenu.png"
+    modAuthors = "Fox2Code"
     modVersion = project.version
     modMain = "com.fox2code.howmanyfoxes.HowManyFoxes"
     modDesc("A HowManyItems port, but for ReIndev.")
