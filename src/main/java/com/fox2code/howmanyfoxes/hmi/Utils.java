@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.creative.CreativeTabAllItems;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.world.RenderHelper;
 import net.minecraft.common.block.Blocks;
@@ -100,13 +101,14 @@ public class Utils {
                HashSet<String> currentItemNames = new HashSet<>();
                int dmg = 0;
 
+               item_loop:
                while(true) {
                   ItemStack itemstack = new ItemStack(item, 1, dmg);
 
                   for(ItemStack hiddenItem : hiddenItems) {
                      if (itemstack.isItemEqual(hiddenItem)) {
-                        itemstack = hiddenItem;
-                        break;
+                        ++dmg;
+                        continue item_loop;
                      }
                   }
 
@@ -137,14 +139,14 @@ public class Utils {
             }
          }
 
+         item_loop:
          for(IRecipe recipe : CraftingManager.getInstance().getRecipeList()) {
             if (!(recipe instanceof RecipesArmorDyes)) {
                ItemStack itemstack = new ItemStack(recipe.getRecipeOutput().getItem(), 1, recipe.getRecipeOutput().getItemDamage());
 
                for(ItemStack hiddenItem : hiddenItems) {
                   if (itemstack.isItemEqual(hiddenItem)) {
-                     itemstack = hiddenItem;
-                     break;
+                     continue item_loop;
                   }
                }
 
@@ -152,6 +154,17 @@ public class Utils {
                   addItemInOrder(allItemsTmp, itemstack);
                }
             }
+         }
+
+         item_loop:
+         for(ItemStack itemstack : CreativeTabAllItems.getGlobalItemList()) {
+            for(ItemStack hiddenItem : hiddenItems) {
+               if (itemstack.isItemEqual(hiddenItem)) {
+                  continue item_loop;
+               }
+            }
+
+            addItemInOrder(allItemsTmp, itemstack);
          }
 
          TabUtils.addHiddenModItems(allItemsTmp);
@@ -169,6 +182,7 @@ public class Utils {
                  item.getItemID() == itemstack.getItemID() &&
                          item.getItemDamage() > itemstack.getItemDamage()) {
             itemList.add(itemList.indexOf(item), itemstack);
+            break;
          }
       }
    }
