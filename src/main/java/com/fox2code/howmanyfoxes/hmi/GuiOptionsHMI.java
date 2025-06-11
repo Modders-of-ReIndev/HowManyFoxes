@@ -84,7 +84,7 @@ public class GuiOptionsHMI extends GuiScreen {
          this.buttonFastSearch.displayString = "Fast Search: " + (Config.fastSearch ? "ON" : "OFF");
       } else if (guibutton == this.buttonHiding) {
          GuiOverlay.showHiddenItems = !GuiOverlay.showHiddenItems;
-         GuiOverlay.resetItems();
+         GuiOverlay.resetItems(true);
          this.buttonHiding.displayString = "Hide Items Mode: " + (GuiOverlay.showHiddenItems ? "ON" : "OFF");
       } else if (guibutton == this.buttonInvertedScroll) {
          Config.scrollInverted = !Config.scrollInverted;

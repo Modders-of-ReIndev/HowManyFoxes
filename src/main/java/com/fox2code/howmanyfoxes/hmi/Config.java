@@ -13,6 +13,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 public class Config {
+   private static final String LEGACY_DEFAULT_CONFIG = "hiddenItems=26,34,59,63,64,68,71,75,10,8,28,21,23,22,36,51,69,76,119,120,121,147,148,162,163,165,164,185,181,182,356,357,331,381,360,1019,1002,1001,183,184,109,112,360,5:3,100:2,116:3,130:4,249:0,178:2,135:0-2,98:2,44:0-2";
    private static final File configFile = new File(CoreConstants.CORE.getMinecraftDir(), "/config/HowManyItems.cfg");
    public static boolean overlayEnabled = true;
    public static boolean cheatsEnabled = false;
@@ -81,7 +82,9 @@ public class Config {
          configWriter.write(System.lineSeparator() + "hiddenItems=");
 
          ArrayList<ItemStack> hiddenItems = GuiOverlay.hiddenItems;
-         if (hiddenItems == null) hiddenItems = Utils.hiddenItems;
+         if (hiddenItems == null || !GuiOverlay.hiddenItemsModified) {
+            hiddenItems = new ArrayList<>(); // Empty list is interpreted as use-defaults.
+         }
          for(int i = 0; i < hiddenItems.size(); ++i) {
             if (i > 0) {
                configWriter.write(",");
@@ -137,16 +140,44 @@ public class Config {
          BufferedReader configReader = new BufferedReader(new FileReader(configFile));
 
          String s;
-         while((s = configReader.readLine()) != null) {
+         while ((s = configReader.readLine()) != null) {
             if (s.charAt(0) != '/' || s.charAt(1) != '/') {
                if (s.startsWith("key_")) {
                   continue;
                }
-               if (!s.startsWith("hiddenItems=")) {
+               if (s.equals("hiddenItems=") || s.equals(LEGACY_DEFAULT_CONFIG)) {
+                  if (GuiOverlay.hiddenItems == null) {
+                     GuiOverlay.hiddenItems = new ArrayList<>(Utils.hiddenItems);
+                  }
+               } else if (s.startsWith("hiddenItems=")) {
+                  if (GuiOverlay.hiddenItems == null) {
+                     GuiOverlay.hiddenItems = new ArrayList<>();
+                     String[] as = s.replaceFirst("hiddenItems=", "").split(",");
+
+                     for (String a : as) {
+                        if (a.contains(":")) {
+                           String[] as2 = a.split(":");
+                           if (as2[1].contains("-")) {
+                              String[] meta = as2[1].split("-");
+                              int minMeta = Integer.parseInt(meta[0]);
+                              int maxMeta = Integer.parseInt(meta[1]);
+
+                              for (int q = minMeta; q <= maxMeta; ++q) {
+                                 GuiOverlay.hiddenItems.add(new ItemStack(Integer.parseInt(as2[0]), 1, q));
+                              }
+                           } else {
+                              GuiOverlay.hiddenItems.add(new ItemStack(Integer.parseInt(as2[0]), 1, Integer.parseInt(as2[1])));
+                           }
+                        } else if (!a.isEmpty()) {
+                           GuiOverlay.hiddenItems.add(new ItemStack(Integer.parseInt(a), 1, 0));
+                        }
+                     }
+                  }
+               } else {
                   if (s.contains("=")) {
                      String[] as = s.split("=");
 
-                     for(Field field : Config.class.getDeclaredFields()) {
+                     for (Field field : Config.class.getDeclaredFields()) {
                         if (field.getName().equalsIgnoreCase(as[0]) &&
                                 !Modifier.isFinal(field.getModifiers())) {
                            if (field.getType() == Integer.TYPE) {
@@ -165,35 +196,10 @@ public class Config {
                   } else if (s.contains(":") && HMIClient.allTabs != null) {
                      String[] as = s.split(":");
 
-                     for(Tab tab : HMIClient.allTabs) {
+                     for (Tab tab : HMIClient.allTabs) {
                         if (tab.TAB_CREATOR.getClass().getSimpleName().equalsIgnoreCase(as[0]) && tab.name().equalsIgnoreCase(as[1])) {
                            tab.index = Integer.parseInt(as[2]);
                         }
-                     }
-                  }
-               } else if (GuiOverlay.hiddenItems == null) {
-                  GuiOverlay.hiddenItems = new ArrayList<>();
-                  String[] as = s.replaceFirst("hiddenItems=", "").split(",");
-
-                  for(String a : as) {
-                     if (a.contains(":")) {
-                        String[] as2 = a.split(":");
-                        if (as2[1].contains("-")) {
-                           String[] meta = as2[1].split("-");
-                           int minMeta = Integer.parseInt(meta[0]);
-                           int maxMeta = Integer.parseInt(meta[1]);
-
-                           for(int q = minMeta; q <= maxMeta; ++q) {
-                              GuiOverlay.hiddenItems.add(new ItemStack(Integer.parseInt(as2[0]), 1, q));
-                              if (minMeta > maxMeta) {
-                                 break;
-                              }
-                           }
-                        } else {
-                           GuiOverlay.hiddenItems.add(new ItemStack(Integer.parseInt(as2[0]), 1, Integer.parseInt(as2[1])));
-                        }
-                     } else if (!a.isEmpty()) {
-                        GuiOverlay.hiddenItems.add(new ItemStack(Integer.parseInt(a), 1, 0));
                      }
                   }
                }

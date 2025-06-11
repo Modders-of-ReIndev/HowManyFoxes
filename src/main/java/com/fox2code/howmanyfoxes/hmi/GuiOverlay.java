@@ -22,6 +22,7 @@ public class GuiOverlay extends GuiScreen {
    private static ArrayList<ItemStack> currentItems;
    public static ItemStack hoverItem;
    private static GuiTextFieldHMI searchBox;
+   public static boolean stateReset = false;
    private static int index = 0;
    private int itemsPerPage;
    private GuiButtonHMI buttonNextPage;
@@ -33,6 +34,7 @@ public class GuiOverlay extends GuiScreen {
    private GuiButtonHMI buttonHeal;
    private GuiButtonHMI buttonTrash;
    private ItemStack guiBlock;
+   public static boolean hiddenItemsModified = false;
    public static ArrayList<ItemStack> hiddenItems;
    public static boolean showHiddenItems = false;
    public int xSize;
@@ -53,7 +55,7 @@ public class GuiOverlay extends GuiScreen {
       this.draggingFrom = null;
       this.modTickKeyPress = false;
       if (hiddenItems == null) {
-         hiddenItems = Utils.hiddenItems;
+         hiddenItems = new ArrayList<>(Utils.hiddenItems);
       }
 
       if (currentItems == null) {
@@ -254,9 +256,11 @@ public class GuiOverlay extends GuiScreen {
             if (hideItems) {
                if (!hiddenItems.contains(currentItem)) {
                   hiddenItems.add(currentItem);
+                  hiddenItemsModified = true;
                }
             } else {
                hiddenItems.remove(currentItem);
+               hiddenItemsModified = true;
             }
          }
 
@@ -449,6 +453,7 @@ public class GuiOverlay extends GuiScreen {
                if (shiftHeld) {
                   for(int i = currentItems.indexOf(hoverItem); currentItems.get(i).getItemID() == hoverItem.getItemID() && i < currentItems.size(); ++i) {
                      hiddenItems.remove(currentItems.get(i));
+                     hiddenItemsModified = true;
                   }
                } else {
                   this.draggingFrom = hoverItem;
@@ -457,6 +462,7 @@ public class GuiOverlay extends GuiScreen {
                for(int i = currentItems.indexOf(hoverItem); currentItems.get(i).getItemID() == hoverItem.getItemID() && i < currentItems.size(); ++i) {
                   if (!hiddenItems.contains(currentItems.get(i))) {
                      hiddenItems.add(currentItems.get(i));
+                     hiddenItemsModified = true;
                   }
                }
             } else {
@@ -634,7 +640,7 @@ public class GuiOverlay extends GuiScreen {
             prevSearches.push(currentItems);
             currentItems = getCurrentList(currentItems);
          } else if (searchBox.getText().isEmpty()) {
-            resetItems();
+            resetItems(false);
          } else if (searchBox.getText().length() < lastSearch.length()) {
             if (prevSearches.isEmpty()) {
                currentItems = getCurrentList(Utils.itemList());
@@ -676,9 +682,11 @@ public class GuiOverlay extends GuiScreen {
       }
    }
 
-   public static void resetItems() {
-      currentItems = getCurrentList(Utils.itemList());
-      prevSearches.clear();
+   public static void resetItems(boolean force) {
+      if (force || !(stateReset && (searchBox == null || searchBox.getText().isEmpty()))) {
+         currentItems = getCurrentList(Utils.itemList());
+         prevSearches.clear();
+      }
    }
 
    public boolean mouseOverUI(Minecraft minecraft, int posX, int posY) {
@@ -782,6 +790,7 @@ public class GuiOverlay extends GuiScreen {
       index = 0;
       ArrayList<ItemStack> newList = new ArrayList<>();
       if (searchBox != null && !searchBox.getText().isEmpty()) {
+         stateReset = false;
          for(ItemStack currentItem : listToSearch) {
             String s = (StringTranslate.getInstance().translateNamedKey(currentItem.getItemName())).trim();
             if (s.toLowerCase().contains(searchBox.getText().toLowerCase()) && (showHiddenItems || !hiddenItems.contains(currentItem))) {
@@ -789,6 +798,7 @@ public class GuiOverlay extends GuiScreen {
             }
          }
       } else {
+         stateReset = true;
          if (showHiddenItems) {
             return new ArrayList<>(Utils.itemList());
          }

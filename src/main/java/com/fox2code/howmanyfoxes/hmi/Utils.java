@@ -13,6 +13,7 @@ import net.minecraft.client.gui.creative.CreativeTabAllItems;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.world.RenderHelper;
 import net.minecraft.common.block.Blocks;
+import net.minecraft.common.block.children.BlockGearConveyorBelt;
 import net.minecraft.common.block.container.Slot;
 import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
@@ -106,7 +107,10 @@ public class Utils {
                   ItemStack itemstack = new ItemStack(item, 1, dmg);
 
                   for(ItemStack hiddenItem : hiddenItems) {
-                     if (itemstack.isItemEqual(hiddenItem)) {
+                     if (hiddenItem.matchIngredient(itemstack)) {
+                        if (dmg == 0) {
+                           break item_loop;
+                        }
                         ++dmg;
                         continue item_loop;
                      }
@@ -119,7 +123,8 @@ public class Utils {
                         s = itemstack.getItemName() + "@" + l;
                      }
 
-                     if (dmg >= 4 && (s.contains(String.valueOf(dmg)) || s.contains(String.valueOf(dmg + 1)) || s.contains(String.valueOf(dmg - 1)))) {
+                     if (dmg >= 4 && (s.contains(String.valueOf(dmg)) || s.contains(String.valueOf(dmg + 1)) ||
+                             s.contains(String.valueOf(dmg - 1)) || s.contains("(INVALID METADATA)"))) {
                         break;
                      }
 
@@ -145,7 +150,7 @@ public class Utils {
                ItemStack itemstack = new ItemStack(recipe.getRecipeOutput().getItem(), 1, recipe.getRecipeOutput().getItemDamage());
 
                for(ItemStack hiddenItem : hiddenItems) {
-                  if (itemstack.isItemEqual(hiddenItem)) {
+                  if (hiddenItem.matchIngredient(itemstack)) {
                      continue item_loop;
                   }
                }
@@ -159,7 +164,8 @@ public class Utils {
          item_loop:
          for(ItemStack itemstack : CreativeTabAllItems.getGlobalItemList()) {
             for(ItemStack hiddenItem : hiddenItems) {
-               if (itemstack.isItemEqual(hiddenItem)) {
+               if (hiddenItem.matchIngredient(itemstack)) {
+                  System.out.println(itemstack.getItemID() + ":" + itemstack.itemDamage);
                   continue item_loop;
                }
             }
@@ -332,55 +338,26 @@ public class Utils {
 
    static {
       short[] a = new short[]{
-         26,
-         34,
-         59,
-         63,
-         64,
-         68,
-         71,
-         75,
-         10,
-         8,
-         28,
-         21,
-         23,
-         22,
-         36,
-         51,
-         69,
-         76,
-         119,
-         120,
-         121,
-         147,
-         148,
-         162,
-         163,
-         165,
-         164,
-         185,
-         181,
-         182,
-         356,
-         357,
-         331,
-         381,
-         360,
-         1019,
-         1002,
-         1001,
-         183,
-         184,
-         109,
-         112
+              26, 34, 59, 63, 64, 68, 71, 75, 10, 8, 28,
+              23, 22, 36, 51, 69, 76, 119, 120, 121,
+              147, 148, 162, 163, 165, 164, 185, 181,
+              182, 198, 356, 357, 331, 381, 360, 1019,
+              1002, 1001, 183, 184, 109, 112,
+              1697, 1698, 1699, 1700, 1701, 1702, 1703,
+              1704, 1705, 1706, 1707, 1708, 1709, 1710,
+              1711, 1712, 1713, 1714, 1715, 1716, 1729,
+              1738, 1748, 1756, 1757, 1758, 1759, 1760,
+              1761, 1771,
       };
       short[][] b = new short[][]{
-         {360, 0}, {5, 3}, {100, 2}, {116, 3}, {130, 4}, {249, 0}, {178, 2}, {135, 0}, {135, 1}, {135, 2}, {98, 2}, {44, 0}, {44, 1}, {44, 2}
+              {360, 0}, {100, 2}, {116, 3}, {130, 4}, {178, 2}, {130, 3},
+              {135, 0}, {135, 1}, {135, 2}, {98, 2}, {44, 0}, {44, 1}, {44, 2}
       };
 
       for(short n : a) {
-         hiddenItems.add(n < 256 ? new ItemStack(Blocks.BLOCKS_LIST[n]) : new ItemStack(Items.ITEMS_LIST[n]));
+         hiddenItems.add(n < 256 ?
+                 new ItemStack(Blocks.BLOCKS_LIST[n], 1, -1) :
+                 new ItemStack(Items.ITEMS_LIST[n], 1, -1));
       }
 
       for(short[] n2 : b) {
