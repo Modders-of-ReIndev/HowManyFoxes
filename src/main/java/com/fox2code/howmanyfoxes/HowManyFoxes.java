@@ -1,12 +1,15 @@
 package com.fox2code.howmanyfoxes;
 
+import com.fox2code.foxevents.EventHandler;
 import com.fox2code.foxloader.client.gui.GuiConfigProvider;
 import com.fox2code.foxloader.event.FoxLoaderEvents;
+import com.fox2code.foxloader.event.client.GuiItemInfoEvent;
 import com.fox2code.foxloader.launcher.FoxLauncher;
 import com.fox2code.foxloader.loader.Mod;
 import com.fox2code.howmanyfoxes.hmi.Config;
 import com.fox2code.howmanyfoxes.hmi.GuiOptionsHMI;
 import com.fox2code.howmanyfoxes.hmi.Utils;
+import net.minecraft.common.util.ChatColors;
 
 import java.util.logging.Logger;
 
@@ -31,6 +34,14 @@ public class HowManyFoxes extends Mod {
             System.out.println("HowManyFoxes: Post init!");
             FoxLoaderEvents.INSTANCE.registerEvents(HMIClient.INSTANCE);
             new Thread(Utils::itemList, "HowManyFoxes async pre-init thread!").start();
+        }
+    }
+
+    @EventHandler(priority = -1000)
+    public void onGetItemInfo(GuiItemInfoEvent event) {
+        if (Config.showItemMod) {
+            event.addDescriptionLine(ChatColors.BLUE +
+                    event.getItemStack().getItem().getRegisteringMod().getModName());
         }
     }
 }

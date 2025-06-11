@@ -18,6 +18,7 @@ public class Config {
    public static boolean overlayEnabled = true;
    public static boolean cheatsEnabled = false;
    public static boolean showItemIDs = false;
+   public static boolean showItemMod = true;
    public static boolean centredSearchBar = false;
    public static boolean fastSearch = false;
    public static boolean scrollInverted = false;

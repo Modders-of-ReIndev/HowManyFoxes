@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiSmallButton;
 
 public class GuiOptionsHMI extends GuiScreen {
    private GuiButton buttonCheats;
-   private GuiButton buttonIDs;
+   private GuiButton buttonShowItemMod;
    private GuiButton buttonCentredSearchBar;
    private GuiButton buttonFastSearch;
    private GuiButton buttonHiding;
@@ -35,8 +35,8 @@ public class GuiOptionsHMI extends GuiScreen {
          );
       this.controlList
          .add(
-            this.buttonIDs = new GuiSmallButton(
-               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Item IDs: " + (Config.showItemIDs ? "ON" : "OFF")
+            this.buttonShowItemMod = new GuiSmallButton(
+               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Show Items Mod: " + (Config.showItemIDs ? "ON" : "OFF")
             )
          );
       this.controlList
@@ -73,9 +73,9 @@ public class GuiOptionsHMI extends GuiScreen {
       if (guibutton == this.buttonCheats) {
          Config.cheatsEnabled = !Config.cheatsEnabled;
          this.buttonCheats.displayString = "Mode: " + (Config.cheatsEnabled ? "Cheat Mode" : "Recipe Mode");
-      } else if (guibutton == this.buttonIDs) {
-         Config.showItemIDs = !Config.showItemIDs;
-         this.buttonIDs.displayString = "Item IDs: " + (Config.showItemIDs ? "ON" : "OFF");
+      } else if (guibutton == this.buttonShowItemMod) {
+         Config.showItemMod = !Config.showItemMod;
+         this.buttonShowItemMod.displayString = "Show Items Mod: " + (Config.showItemMod ? "ON" : "OFF");
       } else if (guibutton == this.buttonCentredSearchBar) {
          Config.centredSearchBar = !Config.centredSearchBar;
          this.buttonCentredSearchBar.displayString = "Centred Search Bar: " + (Config.centredSearchBar ? "ON" : "OFF");
@@ -162,8 +162,8 @@ public class GuiOptionsHMI extends GuiScreen {
             "  LMB on items to spawn a stack and RMB to spawn 1",
             "  Also enables utility buttons"
          };
-      } else if (guibutton == this.buttonIDs) {
-         return new String[]{"Show item IDs in HowManyItems overlay"};
+      } else if (guibutton == this.buttonShowItemMod) {
+         return new String[]{"Show item mods in HowManyFoxes overlay"};
       } else if (guibutton == this.buttonFastSearch) {
          return new String[]{"Automatically focus the searchbar when you press a key"};
       } else if (guibutton == this.buttonHiding) {
