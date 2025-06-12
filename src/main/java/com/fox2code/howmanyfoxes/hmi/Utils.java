@@ -10,6 +10,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.creative.CreativeTabAllItems;
+import net.minecraft.client.gui.creative.CreativeTabs;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.world.RenderHelper;
 import net.minecraft.common.block.Blocks;
@@ -162,7 +163,7 @@ public class Utils {
          }
 
          item_loop:
-         for(ItemStack itemstack : CreativeTabAllItems.getGlobalItemList()) {
+         for(ItemStack itemstack : CreativeTabs.ALL_ITEMS.getGlobalItemList()) {
             for(ItemStack hiddenItem : hiddenItems) {
                if (hiddenItem.matchIngredient(itemstack)) {
                   System.out.println(itemstack.getItemID() + ":" + itemstack.itemDamage);
