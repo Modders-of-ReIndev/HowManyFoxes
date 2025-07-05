@@ -24,7 +24,7 @@ public class GuiRecipeViewer extends GuiContainer {
    private boolean tabPageButton1;
    private boolean tabPageButton2;
    private final GuiScreen parent;
-   private int tabIndex;
+   public int tabIndex;
    public static ArrayList<Tab> tabs;
    private final InventoryRecipeViewer inv;
    private final ContainerRecipeViewer container;
