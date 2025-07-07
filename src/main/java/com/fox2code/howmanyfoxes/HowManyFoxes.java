@@ -2,15 +2,13 @@ package com.fox2code.howmanyfoxes;
 
 import com.fox2code.foxevents.EventHandler;
 import com.fox2code.foxloader.client.KeyBindingAPI;
-import com.fox2code.foxloader.client.gui.GuiConfigProvider;
 import com.fox2code.foxloader.config.ConfigIO;
 import com.fox2code.foxloader.event.FoxLoaderEvents;
 import com.fox2code.foxloader.event.client.GuiItemInfoEvent;
 import com.fox2code.foxloader.launcher.FoxLauncher;
 import com.fox2code.foxloader.loader.Mod;
 import com.fox2code.foxloader.loader.ModContainer;
-import com.fox2code.howmanyfoxes.hmi.Config;
-import com.fox2code.howmanyfoxes.hmi.GuiOptionsHMI;
+import com.fox2code.howmanyfoxes.hmi.HMFKeyBinds;
 import com.fox2code.howmanyfoxes.hmi.GuiOverlay;
 import com.fox2code.howmanyfoxes.hmi.Utils;
 import com.fox2code.howmanyfoxes.hmi.tabs.TabLootHints;
@@ -39,7 +37,7 @@ public class HowManyFoxes extends Mod {
             HMIFoxedConfig.unpackTabIndexes(CONFIG.tableIndexes);
 
             //register keybinds here
-            for (KeyBinding keyBinding : Config.keyBinds) {
+            for (KeyBinding keyBinding : HMFKeyBinds.HMF_KEYBINDS) {
                 KeyBindingAPI.registerKeyBinding(keyBinding);
             }
         }
@@ -70,6 +68,10 @@ public class HowManyFoxes extends Mod {
 
     @EventHandler
     public void onAdditionalTooltipInfo(GuiItemInfoEvent event) {
+        if(!FoxLauncher.isClient()) {
+            return;
+        }
+
         //for loot hints
         final TabLootHints tabLootHints = TabLootHints.tooltipHelper(event.getGuiScreen());
         if(tabLootHints != null) {
@@ -89,6 +91,5 @@ public class HowManyFoxes extends Mod {
                 }
             }
         }
-
     }
 }

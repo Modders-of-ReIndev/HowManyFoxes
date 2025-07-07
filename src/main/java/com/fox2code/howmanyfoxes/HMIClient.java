@@ -12,7 +12,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
-import com.fox2code.howmanyfoxes.hmi.Config;
+import com.fox2code.howmanyfoxes.hmi.HMFKeyBinds;
 import com.fox2code.howmanyfoxes.hmi.GuiOverlay;
 import com.fox2code.howmanyfoxes.hmi.GuiRecipeViewer;
 import com.fox2code.howmanyfoxes.hmi.TabUtils;
@@ -72,8 +72,8 @@ public class HMIClient {
             }
 
             Utils.drawStoredToolTip();
-            if (!Keyboard.isKeyDown(Config.pushRecipe.keyCode) && !Keyboard.isKeyDown(Config.pushUses.keyCode)) {
-                if (Keyboard.isKeyDown(Config.prevRecipe.keyCode)) {
+            if (!Keyboard.isKeyDown(HMFKeyBinds.KEY_GET_RECIPES.keyCode) && !Keyboard.isKeyDown(HMFKeyBinds.KEY_GET_USES.keyCode)) {
+                if (Keyboard.isKeyDown(HMFKeyBinds.KEY_PREV_RECIPE.keyCode)) {
                     if (!keyHeldLastTick) {
                         if ((guiscreen instanceof GuiRecipeViewer ||
                                 guiscreen instanceof GuiOverlay) && !GuiOverlay.searchBoxFocused()) {
@@ -86,7 +86,7 @@ public class HMIClient {
                             GuiOverlay.focusSearchBox();
                         }
                     }
-                } else if (Config.clearSearchBox.keyCode == Config.focusSearchBox.keyCode && Keyboard.isKeyDown(Config.clearSearchBox.keyCode)) {
+                } else if (HMFKeyBinds.KEY_CLEAR_SEARCHBOX.keyCode == HMFKeyBinds.KEY_FOCUS_SEARCHBOX.keyCode && Keyboard.isKeyDown(HMFKeyBinds.KEY_CLEAR_SEARCHBOX.keyCode)) {
                     if (System.currentTimeMillis() > focusCooldown) {
                         focusCooldown = System.currentTimeMillis() + 800L;
                         if (!GuiOverlay.searchBoxFocused()) {
@@ -95,20 +95,20 @@ public class HMIClient {
 
                         GuiOverlay.focusSearchBox();
                     }
-                } else if (Keyboard.isKeyDown(Config.clearSearchBox.keyCode)) {
+                } else if (Keyboard.isKeyDown(HMFKeyBinds.KEY_CLEAR_SEARCHBOX.keyCode)) {
                     GuiOverlay.clearSearchBox();
-                } else if (Keyboard.isKeyDown(Config.focusSearchBox.keyCode)) {
+                } else if (Keyboard.isKeyDown(HMFKeyBinds.KEY_FOCUS_SEARCHBOX.keyCode)) {
                     if (System.currentTimeMillis() > focusCooldown) {
                         focusCooldown = System.currentTimeMillis() + 800L;
                         GuiOverlay.focusSearchBox();
                     }
-                } else if (Keyboard.isKeyDown(Config.allRecipes.keyCode)) {
+                } else if (Keyboard.isKeyDown(HMFKeyBinds.KEY_ALL_RECIPES.keyCode)) {
                     pushRecipe(guiscreen, null, false);
                 } else {
                     keyHeldLastTick = false;
                 }
             } else if (!keyHeldLastTick) {
-                boolean getUses = Keyboard.isKeyDown(Config.pushUses.keyCode);
+                boolean getUses = Keyboard.isKeyDown(HMFKeyBinds.KEY_GET_USES.keyCode);
                 scaledresolution.setDimensions(mc.gameSettings, mc.displayWidth, mc.displayHeight);
                 int i = scaledresolution.getScaledWidth();
                 int j = scaledresolution.getScaledHeight();
@@ -131,16 +131,16 @@ public class HMIClient {
                 }
             }
 
-            if (Keyboard.isKeyDown(Config.pushRecipe.keyCode) ||
-                    Keyboard.isKeyDown(Config.pushUses.keyCode) ||
-                    Keyboard.isKeyDown(Config.prevRecipe.keyCode)) {
+            if (Keyboard.isKeyDown(HMFKeyBinds.KEY_GET_RECIPES.keyCode) ||
+                    Keyboard.isKeyDown(HMFKeyBinds.KEY_GET_USES.keyCode) ||
+                    Keyboard.isKeyDown(HMFKeyBinds.KEY_PREV_RECIPE.keyCode)) {
                 keyHeldLastTick = true;
             }
         }
     }
 
     public void tickGame(Minecraft minecraft) {
-        if (minecraft.currentScreen == null && Keyboard.isKeyDown(Config.allRecipes.keyCode) && !keyHeldLastTick) {
+        if (minecraft.currentScreen == null && Keyboard.isKeyDown(HMFKeyBinds.KEY_ALL_RECIPES.keyCode) && !keyHeldLastTick) {
             keyHeldLastTick = true;
             pushRecipe(null, null, false);
         }
@@ -195,21 +195,31 @@ public class HMIClient {
             TabUtils.loadTabs(allTabs = new ArrayList<>(), "HMF");
             allTabs.addAll(modTabs);
             //Config.readConfig();
-            tabs = Config.orderTabs();
+            tabs = TabUtils.orderTabs();
         }
 
         return tabs;
     }
 
     public static void tabOrderChanged(boolean[] tabEnabled, Tab[] tabOrder) {
-        Config.tabOrderChanged(tabEnabled, tabOrder);
-        tabs = Config.orderTabs();
+        for (Tab tab : HMIClient.allTabs) {
+            for (int i = 0; i < tabOrder.length; ++i) {
+                if (tab.equals(tabOrder[i])) {
+                    tab.index = i;
+                    if (!tabEnabled[i]) {
+                        tab.index = -1;
+                    }
+                }
+            }
+        }
+        HowManyFoxes.forceSaveConfig();
+        tabs = TabUtils.orderTabs();
     }
 
     @EventHandler
     public void onCameraAndRenderUpdated(CameraAndRenderUpdatedEvent event) {
         if (this.HMI_LOCAL_BLOCKED_KEY &&
-                !Keyboard.isKeyDown(Config.toggleOverlay.keyCode)) {
+                !Keyboard.isKeyDown(HMFKeyBinds.KEY_TOGGLE_OVERLAY.keyCode)) {
             this.HMI_LOCAL_BLOCKED_KEY = false;
         }
 
@@ -222,7 +232,7 @@ public class HMIClient {
         }
 
         if (!this.HMI_LOCAL_BLOCKED_KEY &&
-                Keyboard.isKeyDown(Config.toggleOverlay.keyCode)) {
+                Keyboard.isKeyDown(HMFKeyBinds.KEY_TOGGLE_OVERLAY.keyCode)) {
             HMIClient.INSTANCE.runClickEvent();
             this.HMI_LOCAL_BLOCKED_KEY = true;
         }

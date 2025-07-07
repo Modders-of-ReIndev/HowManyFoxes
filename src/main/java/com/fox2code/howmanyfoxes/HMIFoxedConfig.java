@@ -2,8 +2,8 @@ package com.fox2code.howmanyfoxes;
 
 import com.fox2code.foxloader.client.gui.GuiConfigProviderConfigObject;
 import com.fox2code.foxloader.config.ConfigEntry;
-import com.fox2code.howmanyfoxes.hmi.Config;
 import com.fox2code.howmanyfoxes.hmi.GuiOptionsHMI;
+import com.fox2code.howmanyfoxes.hmi.GuiRecipeViewer;
 import com.fox2code.howmanyfoxes.hmi.Utils;
 import com.fox2code.howmanyfoxes.hmi.tabs.Tab;
 import net.minecraft.client.gui.GuiScreen;
@@ -78,10 +78,10 @@ public class HMIFoxedConfig implements GuiConfigProviderConfigObject {
     public boolean recipeViewerDraggableGui = false;
 
     @ConfigEntry
-    public int recipeViewerGuiWidth = Config.recipeViewerGuiWidthDefault;
+    public int recipeViewerGuiWidth = GuiRecipeViewer.RECIPE_VIEWER_DEFAULT_WIDTH;
 
     @ConfigEntry
-    public int recipeViewerGuiHeight = Config.recipeViewerGuiHeightDefault;
+    public int recipeViewerGuiHeight = GuiRecipeViewer.RECIPE_VIEWER_DEFAULT_HEIGHT;
 
 
     @Override

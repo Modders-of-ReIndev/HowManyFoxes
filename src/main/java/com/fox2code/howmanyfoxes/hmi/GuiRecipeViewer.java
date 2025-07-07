@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 public class GuiRecipeViewer extends GuiContainer {
+   public static final int RECIPE_VIEWER_DEFAULT_WIDTH = 251;
+   public static final int RECIPE_VIEWER_DEFAULT_HEIGHT = 134;
+
    private boolean dragging;
    private float cursorPosX;
    private float cursorPosY;
@@ -62,7 +65,7 @@ public class GuiRecipeViewer extends GuiContainer {
          this.xSize = HowManyFoxes.CONFIG.recipeViewerGuiWidth;
          this.ySize = HowManyFoxes.CONFIG.recipeViewerGuiHeight;
       } else {
-         this.xSize = Config.recipeViewerGuiWidthDefault;
+         this.xSize = RECIPE_VIEWER_DEFAULT_WIDTH;
          if (this.parent instanceof GuiContainer) {
             try {
                this.xSize = Math.max(((GuiContainer) this.parent).getXSize(), this.xSize);
@@ -70,18 +73,18 @@ public class GuiRecipeViewer extends GuiContainer {
                HowManyFoxes.logger.log(Level.WARNING, "Failed to get XSize of " + this.parent.getClass().getName(), var2);
             }
          }
-         this.ySize = Config.recipeViewerGuiHeightDefault;
+         this.ySize = RECIPE_VIEWER_DEFAULT_HEIGHT;
       }
 
       int maxXSize = Math.max(this.width - 48,
-              Config.recipeViewerGuiWidthDefault);
+              RECIPE_VIEWER_DEFAULT_WIDTH);
       this.xSize = MathHelper.clamp_int(this.xSize,
-              Config.recipeViewerGuiWidthDefault / 2, maxXSize);
+              RECIPE_VIEWER_DEFAULT_WIDTH / 2, maxXSize);
 
       int maxYSize = Math.max(this.height - 48,
-              Config.recipeViewerGuiHeightDefault);
+              RECIPE_VIEWER_DEFAULT_HEIGHT);
       this.ySize = MathHelper.clamp_int(this.xSize,
-              Config.recipeViewerGuiHeightDefault / 2, maxYSize);
+              RECIPE_VIEWER_DEFAULT_HEIGHT / 2, maxYSize);
 
       tabs = HMIClient.getTabs();
       this.newTab(tabs.getFirst());
@@ -244,11 +247,11 @@ public class GuiRecipeViewer extends GuiContainer {
       int y = (this.height - this.ySize) / 2;
       Tab currentTab = tabs.get(this.tabIndex);
       int newXSize = MathHelper.clamp_int((int) clickedX - x,
-              Math.max(Config.recipeViewerGuiWidthDefault / 2, currentTab.WIDTH + 8),
-              Math.max(this.width - 48, Config.recipeViewerGuiWidthDefault));
+              Math.max(RECIPE_VIEWER_DEFAULT_WIDTH / 2, currentTab.WIDTH + 8),
+              Math.max(this.width - 48, RECIPE_VIEWER_DEFAULT_WIDTH));
       int newYSize = MathHelper.clamp_int((int) clickedY - y,
-              Math.max(Config.recipeViewerGuiHeightDefault / 2, currentTab.HEIGHT + 8),
-              Math.max(this.height - 48, Config.recipeViewerGuiHeightDefault));
+              Math.max(RECIPE_VIEWER_DEFAULT_HEIGHT / 2, currentTab.HEIGHT + 8),
+              Math.max(this.height - 48, RECIPE_VIEWER_DEFAULT_HEIGHT));
 
       if (this.xSize != newXSize || this.ySize != newYSize) {
          this.xSize = newXSize;

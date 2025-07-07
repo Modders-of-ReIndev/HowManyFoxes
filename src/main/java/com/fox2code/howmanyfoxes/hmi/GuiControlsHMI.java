@@ -23,10 +23,10 @@ public class GuiControlsHMI extends GuiScreen {
    public void initGui() {
       int i = this.func_20080_j();
 
-      for(int j = 0; j < Config.keyBinds.length; ++j) {
+      for(int j = 0; j < HMFKeyBinds.HMF_KEYBINDS.length; ++j) {
          this.controlList.add(new GuiSmallButton(j, i + j % 2 * 160,
                  this.height / 6 + 24 * (j >> 1), 70, 20,
-                 Keyboard.getKeyName(Config.keyBinds[j].keyCode)));
+                 Keyboard.getKeyName(HMFKeyBinds.HMF_KEYBINDS[j].keyCode)));
       }
 
       this.controlList.add(this.buttonDone = new GuiButton(-1,
@@ -39,7 +39,7 @@ public class GuiControlsHMI extends GuiScreen {
          for(int l = 0; l < this.controlList.size(); ++l) {
             GuiButton guibutton = (GuiButton)this.controlList.get(l);
             if (guibutton.id == this.buttonId && !guibutton.mousePressed(this.mc, x, y)) {
-               guibutton.displayString = Keyboard.getKeyName(Config.keyBinds[l].keyCode);
+               guibutton.displayString = Keyboard.getKeyName(HMFKeyBinds.HMF_KEYBINDS[l].keyCode);
                this.buttonId = -1;
                break;
             }
@@ -56,15 +56,15 @@ public class GuiControlsHMI extends GuiScreen {
             i = 0;
          }
 
-         if (Config.keyBinds[this.buttonId] == Config.toggleOverlay) {
+         if (HMFKeyBinds.HMF_KEYBINDS[this.buttonId] == HMFKeyBinds.KEY_TOGGLE_OVERLAY) {
             for(int j = 0; j < this.mc.gameSettings.keyBindings.length; ++j) {
-               if (this.mc.gameSettings.keyBindings[j] == Config.toggleOverlay) {
+               if (this.mc.gameSettings.keyBindings[j] == HMFKeyBinds.KEY_TOGGLE_OVERLAY) {
                   this.mc.gameSettings.setKeyBinding(j, i);
                }
             }
          }
 
-         Config.keyBinds[this.buttonId].keyCode = i;
+         HMFKeyBinds.HMF_KEYBINDS[this.buttonId].keyCode = i;
          ((GuiButton)this.controlList.get(this.buttonId)).displayString = Keyboard.getKeyName(i);
          this.buttonId = -1;
          HMIClient.onSettingChanged();
@@ -79,7 +79,7 @@ public class GuiControlsHMI extends GuiScreen {
          this.mc.displayGuiScreen(this.parentScreen);
       } else {
          this.buttonId = guibutton.id;
-         guibutton.displayString = "> " + Keyboard.getKeyName(Config.keyBinds[guibutton.id].keyCode) + " <";
+         guibutton.displayString = "> " + Keyboard.getKeyName(HMFKeyBinds.HMF_KEYBINDS[guibutton.id].keyCode) + " <";
          HMIClient.onSettingChanged();
       }
    }
@@ -91,8 +91,8 @@ public class GuiControlsHMI extends GuiScreen {
       int k = this.func_20080_j();
 
       StringTranslate st = StringTranslate.getInstance();
-      for(int l = 0; l < Config.keyBinds.length; ++l) {
-         this.drawString(this.fontRenderer, st.translateKey(Config.keyBinds[l].keyDescription),
+      for(int l = 0; l < HMFKeyBinds.HMF_KEYBINDS.length; ++l) {
+         this.drawString(this.fontRenderer, st.translateKey(HMFKeyBinds.HMF_KEYBINDS[l].keyDescription),
                  k + l % 2 * 160 + 70 + 6, this.height / 6 + 24 * (l >> 1) + 7, -1);
       }
 

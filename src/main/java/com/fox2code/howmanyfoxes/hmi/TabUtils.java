@@ -1,5 +1,7 @@
 package com.fox2code.howmanyfoxes.hmi;
 
+import com.fox2code.howmanyfoxes.HMIClient;
+import com.fox2code.howmanyfoxes.HowManyFoxes;
 import com.fox2code.howmanyfoxes.event.AddTabItemsEvent;
 import com.fox2code.howmanyfoxes.event.RegisterTabsEvent;
 import com.fox2code.howmanyfoxes.hmi.tabs.*;
@@ -8,6 +10,7 @@ import net.minecraft.common.block.Blocks;
 import net.minecraft.common.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,5 +62,36 @@ public class TabUtils {
 
    public static void addHiddenModItems(ArrayList<ItemStack> itemList) {
       new AddTabItemsEvent(itemList).callEvent();
+   }
+
+   public static ArrayList<Tab> orderTabs() {
+       final ArrayList<Tab> orderedTabs = new ArrayList<>();
+
+       for (Tab tab : HMIClient.allTabs) {
+           if (tab.index >= 0) {
+               while (orderedTabs.size() <= tab.index) {
+                   orderedTabs.add(null);
+               }
+               orderedTabs.set(tab.index, tab);
+           }
+       }
+
+       orderedTabs.removeAll(Collections.singleton(null));
+
+       for (int i = 0; i < orderedTabs.size(); i++) {
+           orderedTabs.get(i).index = i;
+       }
+
+       for (Tab tab : HMIClient.allTabs) {
+           if (tab.index == -2) {
+               tab.index = orderedTabs.size();
+               orderedTabs.add(tab);
+           } else if (tab.index < 0) {
+               tab.index = -1;
+           }
+       }
+
+       HowManyFoxes.forceSaveConfig();
+       return orderedTabs;
    }
 }

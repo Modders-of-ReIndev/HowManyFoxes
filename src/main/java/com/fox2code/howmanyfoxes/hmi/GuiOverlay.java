@@ -611,8 +611,8 @@ public class GuiOverlay extends GuiScreen {
          && HowManyFoxes.CONFIG.fastSearch
          && !HMIClient.keyHeldLastTick
          && i != this.mc.gameSettings.keyBindInventory.keyCode
-         && i != Config.allRecipes.keyCode
-         && i != Config.toggleOverlay.keyCode
+         && i != HMFKeyBinds.KEY_ALL_RECIPES.keyCode
+         && i != HMFKeyBinds.KEY_TOGGLE_OVERLAY.keyCode
          && (ChatAllowedCharacters.isAllowedCharacter(c) || i == 14 &&
               searchBox != null && !searchBox.getText().isEmpty())) {
          this.scaledresolution.setDimensions(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
@@ -621,8 +621,8 @@ public class GuiOverlay extends GuiScreen {
          int posX = Mouse.getEventX() * i2 / this.mc.displayWidth;
          int posY = j2 - Mouse.getEventY() * j2 / this.mc.displayHeight - 1;
          if ((Utils.hoveredItem(screen, posX, posY) == null && hoverItem == null ||
-                 i != Config.pushRecipe.keyCode && i != Config.pushUses.keyCode)
-            && (!(screen instanceof GuiRecipeViewer) || i != Config.prevRecipe.keyCode)
+                 i != HMFKeyBinds.KEY_GET_RECIPES.keyCode && i != HMFKeyBinds.KEY_GET_USES.keyCode)
+            && (!(screen instanceof GuiRecipeViewer) || i != HMFKeyBinds.KEY_PREV_RECIPE.keyCode)
             && System.currentTimeMillis() > lastKeyTimeout) {
             searchBox.isFocused = true;
          }
@@ -658,7 +658,7 @@ public class GuiOverlay extends GuiScreen {
                lastKey = i;
                lastKeyTimeout = System.currentTimeMillis() + 200L;
                if (this.mc.currentScreen == this) {
-                  if (i == Config.allRecipes.keyCode && this.mc.thePlayer.inventory.getCursorStack() == null) {
+                  if (i == HMFKeyBinds.KEY_ALL_RECIPES.keyCode && this.mc.thePlayer.inventory.getCursorStack() == null) {
                      if (screen instanceof GuiRecipeViewer) {
                         ((GuiRecipeViewer)screen).push(null, false);
                      } else if (!HMIClient.getTabs().isEmpty()) {
