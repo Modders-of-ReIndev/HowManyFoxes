@@ -1,7 +1,8 @@
-package com.fox2code.howmanyfoxes.hmi;
+package com.fox2code.howmanyfoxes.hmi.overlay;
 
 import com.fox2code.howmanyfoxes.HMIClient;
 import com.fox2code.howmanyfoxes.HowManyFoxes;
+import com.fox2code.howmanyfoxes.hmi.*;
 import com.fox2code.howmanyfoxes.hmi.config.DefaultHiddenItems;
 import com.fox2code.howmanyfoxes.hmi.config.HMFKeyBinds;
 import net.minecraft.client.Minecraft;
@@ -31,11 +32,8 @@ public class GuiOverlay extends GuiScreen {
    private GuiButtonHMI buttonNextPage;
    private GuiButtonHMI buttonPrevPage;
    private GuiButtonHMI buttonOptions;
-   private GuiButtonHMI buttonTimeDay;
-   private GuiButtonHMI buttonTimeNight;
-   private GuiButtonHMI buttonToggleRain;
-   private GuiButtonHMI buttonHeal;
    private GuiButtonHMI buttonTrash;
+   private final OverlayUtilityButtons utilityButtons = new OverlayUtilityButtons();
    private ItemStack guiBlock;
    public static boolean hiddenItemsModified = false;
    public static ArrayList<ItemStack> hiddenItems;
@@ -101,41 +99,25 @@ public class GuiOverlay extends GuiScreen {
          searchBoxWidth = this.xSize - 20 - 3;
       }
 
-      int id = 0;
-      (searchBox = new GuiTextFieldHMI(searchBoxX, screen.height - 20 + 1, searchBoxWidth, 16, search))
-              .setMaxStringLength((searchBoxWidth - 10) / 6);
-      this.controlList.add(this.buttonOptions = new GuiButtonHMI(
-              id++, searchBoxX + searchBoxWidth + 1, screen.height - 20 - 1, 20,
-              HowManyFoxes.CONFIG.cheatsEnabled ? 1 : 0, this.guiBlock));
-      this.controlList.add(this.buttonNextPage = new GuiButtonHMI(
-              id++, screen.width - (screen.width - k - this.xSize) / 3, 0,
-              (screen.width - k - this.xSize) / 3, 20, "Next"));
-      this.controlList.add(this.buttonPrevPage = new GuiButtonHMI(
-              id++, k + this.xSize, 0,
-              (screen.width - k - this.xSize) / 3, 20, "Prev"));
-      if (HowManyFoxes.CONFIG.cheatsEnabled) {
-         boolean mp = this.mc.theWorld.isRemote;
-         if (!mp || !HowManyFoxes.CONFIG.mpTimeDayCommand.isEmpty()) {
-            this.controlList.add(this.buttonTimeDay = new GuiButtonHMI(id++, 0, 0, 20, 12));
-         }
-
-         if (!mp || !HowManyFoxes.CONFIG.mpTimeNightCommand.isEmpty()) {
-            this.controlList.add(this.buttonTimeNight = new GuiButtonHMI(id++, 20, 0, 20, 13));
-         }
-
-         if (!mp || !HowManyFoxes.CONFIG.mpRainOFFCommand.isEmpty() || !HowManyFoxes.CONFIG.mpRainONCommand.isEmpty()) {
-            this.controlList.add(this.buttonToggleRain = new GuiButtonHMI(id++, 40, 0, 20, 14));
-         }
-
-         if (!mp || !HowManyFoxes.CONFIG.mpHealCommand.isEmpty()) {
-            this.controlList.add(this.buttonHeal = new GuiButtonHMI(id++, 60, 0, 20, 15));
-         }
-
-         if (!mp) {
-            this.controlList.add(this.buttonTrash = new GuiButtonHMI(id++, 0, screen.height - 20 - 1, 60, 20, "Trash"));
-         }
-      }
-   }
+        int id = 0;
+        (searchBox = new GuiTextFieldHMI(searchBoxX, screen.height - 20 + 1, searchBoxWidth, 16, search))
+                .setMaxStringLength((searchBoxWidth - 10) / 6);
+        this.controlList.add(this.buttonOptions = new GuiButtonHMI(
+                id++, searchBoxX + searchBoxWidth + 1, screen.height - 20 - 1, 20,
+                HowManyFoxes.CONFIG.cheatsEnabled ? 1 : 0, this.guiBlock));
+        this.controlList.add(this.buttonNextPage = new GuiButtonHMI(
+                id++, screen.width - (screen.width - k - this.xSize) / 3, 0,
+                (screen.width - k - this.xSize) / 3, 20, "Next"));
+        this.controlList.add(this.buttonPrevPage = new GuiButtonHMI(
+                id++, k + this.xSize, 0,
+                (screen.width - k - this.xSize) / 3, 20, "Prev"));
+        if (HowManyFoxes.CONFIG.cheatsEnabled) {
+            if (!this.mc.theWorld.isRemote) {
+                this.controlList.add(this.buttonTrash = new GuiButtonHMI(id++, 0, screen.height - 20 - 1, 60, 20, "Trash"));
+            }
+            utilityButtons.initButtons(this.controlList, screen, id);
+        }
+    }
 
    @Override
    public void drawScreen(float mouseX, float mouseY, float deltaTicks) {
@@ -300,91 +282,88 @@ public class GuiOverlay extends GuiScreen {
          hoverItem = null;
       }
 
-      String s = "";
-      ItemStack displayItem = null;
-      if (inventoryplayer.getCursorStack() == null && hoverItem != null) {
-         if (!showHiddenItems) {
-            // s = Utils.getNiceItemName(hoverItem);
-            displayItem = hoverItem;
-         } else if (this.draggingFrom != null && this.draggingFrom != hoverItem) {
-            if (hiddenItems.contains(hoverItem)) {
-               s = "Unhide selected items";
+        String s = "";
+        ItemStack displayItem = null;
+        if (inventoryplayer.getCursorStack() == null && hoverItem != null) {
+            if (!showHiddenItems) {
+                // s = Utils.getNiceItemName(hoverItem);
+                displayItem = hoverItem;
+            } else if (this.draggingFrom != null && this.draggingFrom != hoverItem) {
+                if (hiddenItems.contains(hoverItem)) {
+                    s = "Unhide selected items";
+                } else {
+                    s = "Hide selected items";
+                }
+            } else if (hiddenItems.contains(hoverItem)) {
+                if (shiftHeld && hoverItem.getHasSubtypes()) {
+                    s = "Unhide all items with same ID and higher dmg";
+                } else {
+                    s = "Unhide " + Utils.getNiceItemName(hoverItem);
+                }
+            } else if (shiftHeld && hoverItem.getHasSubtypes()) {
+                s = "Hide all items with same ID and higher dmg";
             } else {
-               s = "Hide selected items";
+                s = "Hide " + Utils.getNiceItemName(hoverItem);
             }
-         } else if (hiddenItems.contains(hoverItem)) {
-            if (shiftHeld && hoverItem.getHasSubtypes()) {
-               s = "Unhide all items with same ID and higher dmg";
+        } else if (!HowManyFoxes.CONFIG.cheatsEnabled
+                || inventoryplayer.getCursorStack() == null
+                || hoverItem == null
+                && (
+                mouseY <= k + w % 18 / 2
+                        || mouseY <= screen.height - 20 + canvasHeight % 18 / 2 - canvasHeight
+                        || mouseX >= screen.width - w % 18 / 2
+                        || mouseY <= 20 + canvasHeight % 18 / 2
+                        || mouseY >= 20 + canvasHeight
+        )) {
+            if (this.buttonOptions.mousePressed(this.mc, mouseX, mouseY)) {
+                if (!shiftHeld || HMIClient.getTabs().isEmpty()) {
+                    s = "Settings";
+                } else if (this.guiBlock != null) {
+                    s = "View " + Utils.getNiceItemName(this.guiBlock) + " Recipes";
+                } else {
+                    s = "View All Recipes";
+                }
+            } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonTrash.mousePressed(this.mc, mouseX, mouseY)) {
+                if (inventoryplayer.getCursorStack() == null) {
+                    if (shiftHeld) {
+                        s = "Clear WHOLE inventory";
+                    } else {
+                        s = "Drag item here to delete";
+                    }
+                } else if (shiftHeld) {
+                    s = "Delete ALL " + Utils.getNiceItemName(inventoryplayer.getCursorStack());
+                } else {
+                    s = "Delete " + Utils.getNiceItemName(inventoryplayer.getCursorStack());
+                }
             } else {
-               s = "Unhide " + Utils.getNiceItemName(hoverItem);
+                final String request = utilityButtons.getTooltipFor(this.mc, mouseX, mouseY);
+                if(request != null) {
+                    s = request;
+                }
             }
-         } else if (shiftHeld && hoverItem.getHasSubtypes()) {
-            s = "Hide all items with same ID and higher dmg";
-         } else {
-            s = "Hide " + Utils.getNiceItemName(hoverItem);
-         }
-      } else if (!HowManyFoxes.CONFIG.cheatsEnabled
-         || inventoryplayer.getCursorStack() == null
-         || hoverItem == null
-            && (
-               mouseY <= k + w % 18 / 2
-                  || mouseY <= screen.height - 20 + canvasHeight % 18 / 2 - canvasHeight
-                  || mouseX >= screen.width - w % 18 / 2
-                  || mouseY <= 20 + canvasHeight % 18 / 2
-                  || mouseY >= 20 + canvasHeight
-            )) {
-         if (this.buttonOptions.mousePressed(this.mc, mouseX, mouseY)) {
-            if (!shiftHeld || HMIClient.getTabs().isEmpty()) {
-               s = "Settings";
-            } else if (this.guiBlock != null) {
-               s = "View " + Utils.getNiceItemName(this.guiBlock) + " Recipes";
-            } else {
-               s = "View All Recipes";
-            }
-         } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonTimeDay.mousePressed(this.mc, mouseX, mouseY)) {
-            s = "Set time to day";
-         } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonTimeNight.mousePressed(this.mc, mouseX, mouseY)) {
-            s = "Set time to night";
-         } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonToggleRain.mousePressed(this.mc, mouseX, mouseY)) {
-            s = "Toggle rain";
-         } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonHeal.mousePressed(this.mc, mouseX, mouseY)) {
-            s = "Heal";
-         } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonTrash.mousePressed(this.mc, mouseX, mouseY)) {
-            if (inventoryplayer.getCursorStack() == null) {
-               if (shiftHeld) {
-                  s = "Clear WHOLE inventory";
-               } else {
-                  s = "Drag item here to delete";
-               }
-            } else if (shiftHeld) {
-               s = "Delete ALL " + Utils.getNiceItemName(inventoryplayer.getCursorStack());
-            } else {
-               s = "Delete " + Utils.getNiceItemName(inventoryplayer.getCursorStack());
-            }
-         }
-      } else {
-         s = "Delete " + Utils.getNiceItemName(inventoryplayer.getCursorStack());
-      }
+        } else {
+            s = "Delete " + Utils.getNiceItemName(inventoryplayer.getCursorStack());
+        }
 
-      ItemStack hoveredItem;
-      if (displayItem != null || !s.isEmpty()) {
-         float k2 = mouseX;
-         float i2 = mouseY;
-         int j2 = this.fontRenderer.getStringWidth(s);
-         if (mouseX + j2 + 12 > screen.width - 3) {
-            k2 = mouseX - (mouseX + j2 + 12 - screen.width + 2);
-         }
+        ItemStack hoveredItem;
+        if (displayItem != null || !s.isEmpty()) {
+            float k2 = mouseX;
+            float i2 = mouseY;
+            int j2 = this.fontRenderer.getStringWidth(s);
+            if (mouseX + j2 + 12 > screen.width - 3) {
+                k2 = mouseX - (mouseX + j2 + 12 - screen.width + 2);
+            }
 
-         if (mouseY - 15 < 0) {
-            i2 = mouseY - (mouseY - 15);
-         }
+            if (mouseY - 15 < 0) {
+                i2 = mouseY - (mouseY - 15);
+            }
 
-         if (displayItem != null) {
-            Utils.drawTooltip(this, displayItem, k2, i2);
-         } else {
-            Utils.drawTooltip(s, k2, i2);
-         }
-      } /* else if (inventoryplayer.getCursorStack() == null &&
+            if (displayItem != null) {
+                Utils.drawTooltip(this, displayItem, k2, i2);
+            } else {
+                Utils.drawTooltip(s, k2, i2);
+            }
+        } /* else if (inventoryplayer.getCursorStack() == null &&
               (hoveredItem = Utils.hoveredItem(screen, mouseX, mouseY)) != null) {
          s = StringTranslate.getInstance().translateNamedKey(hoveredItem.getItemName());
          int j3 = this.fontRenderer.getStringWidth(s);
@@ -407,7 +386,7 @@ public class GuiOverlay extends GuiScreen {
             this.fontRenderer.drawStringWithShadow(s, mouseX + j3 + 12, mouseY - 12, -1);
          }
       } */
-   }
+    }
 
    @Override
    public void mouseClicked(float posX, float posY, int eventButton) {
@@ -528,81 +507,63 @@ public class GuiOverlay extends GuiScreen {
       }
    }
 
-   @Override
-   protected void actionPerformed(GuiButton guibutton) {
-      boolean shiftHeld = Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54);
-      if (guibutton == this.buttonNextPage) {
-         this.incIndex();
-      } else if (guibutton == this.buttonPrevPage) {
-         this.decIndex();
-      } else if (guibutton == this.buttonOptions) {
-         if (!shiftHeld || HMIClient.getTabs().size() <= 0) {
-            this.mc.displayGuiScreen(new GuiOptionsHMI(screen));
-         } else if (this.guiBlock == null) {
-            HMIClient.pushRecipe(screen, null, true);
-         } else {
+    @Override
+    protected void actionPerformed(GuiButton guibutton) {
+        final boolean shiftHeld = Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54);
+
+        if (guibutton == this.buttonNextPage) {
+            this.incIndex();
+            return;
+        }
+
+        if (guibutton == this.buttonPrevPage) {
+            this.decIndex();
+            return;
+        }
+
+        if (guibutton == this.buttonOptions) {
+            if (!shiftHeld || HMIClient.getTabs().isEmpty()) {
+                this.mc.displayGuiScreen(new GuiOptionsHMI(screen));
+                return;
+            }
+            if (this.guiBlock == null) {
+                HMIClient.pushRecipe(screen, null, true);
+                return;
+            }
             HMIClient.pushTabBlock(screen, this.guiBlock);
-         }
-      } else if (guibutton != this.buttonTimeDay && guibutton != this.buttonTimeNight && guibutton != this.buttonToggleRain) {
-         if (!this.mc.theWorld.isRemote && guibutton == this.buttonHeal) {
-            this.mc.thePlayer.heal(100);
-            this.mc.thePlayer.air = 300;
-            if (this.mc.thePlayer.isBurning()) {
-               this.mc.thePlayer.fire = -this.mc.thePlayer.fireResistance;
-               this.mc.theWorld.playSoundAtEntity(this.mc.thePlayer, "random.fizz", 0.7F, 1.6F + (Utils.rand.nextFloat() - Utils.rand.nextFloat()) * 0.4F);
-            }
-         } else if (!this.mc.theWorld.isRemote && guibutton == this.buttonTrash) {
+            return;
+        }
+
+        //utility buttons
+        if(utilityButtons.action(this.mc, screen, guibutton)) {
+            return;
+        }
+
+        //trash button
+        if (!this.mc.theWorld.isRemote && guibutton == this.buttonTrash) {
             if (this.mc.thePlayer.inventory.getCursorStack() == null) {
-               if (shiftHeld && !(screen instanceof GuiRecipeViewer) && System.currentTimeMillis() > deleteAllWaitUntil) {
-                  this.mc.sendAbritraryCommand("/clear");
-               }
-            } else {
-               if (shiftHeld) {
-                  for(int i = 0; i < screen.inventorySlots.slots.size(); ++i) {
-                     Slot slot = screen.inventorySlots.slots.get(i);
-                     if (slot.getHasStack() && slot.getStack().isItemEqual(
-                             this.mc.thePlayer.inventory.getCursorStack())) {
+                if (shiftHeld && !(screen instanceof GuiRecipeViewer) && System.currentTimeMillis() > deleteAllWaitUntil) {
+                    this.mc.sendAbritraryCommand("/clear");
+                }
+                return;
+            }
+            //remove the selected button
+            if (shiftHeld) {
+                for (int i = 0; i < screen.inventorySlots.slots.size(); ++i) {
+                    Slot slot = screen.inventorySlots.slots.get(i);
+                    if (slot.getHasStack() && slot.getStack().isItemEqual(
+                            this.mc.thePlayer.inventory.getCursorStack())) {
                         slot.putStack(null);
-                     }
-                  }
+                    }
+                }
 
-                  deleteAllWaitUntil = System.currentTimeMillis() + 1000L;
-               }
+                deleteAllWaitUntil = System.currentTimeMillis() + 1000L;
+            }
 
-               this.mc.thePlayer.inventory.setCursorStack(null);
-            }
-         }
-      } else if (!this.mc.theWorld.isRemote) {
-         try {
-            if (guibutton == this.buttonTimeDay) {
-               long l = this.mc.theWorld.worldInfo.getWorldTime() + 24000L;
-               this.mc.theWorld.worldInfo.setWorldTime(l - l % 24000L);
-            } else if (guibutton == this.buttonTimeNight) {
-               long l = this.mc.theWorld.worldInfo.getWorldTime() + 24000L;
-               this.mc.theWorld.worldInfo.setWorldTime(l - l % 24000L + 13000L);
-            } else {
-               this.mc.theWorld.worldInfo.setThundering(!this.mc.theWorld.worldInfo.getThundering());
-               this.mc.theWorld.worldInfo.setRaining(!this.mc.theWorld.worldInfo.getRaining());
-            }
-         } catch (IllegalArgumentException var6) {
-            var6.printStackTrace();
-         }
-      } else if (guibutton == this.buttonTimeDay) {
-         this.mc.thePlayer.sendChatMessage(HowManyFoxes.CONFIG.mpTimeDayCommand);
-      } else if (guibutton == this.buttonTimeNight) {
-         this.mc.thePlayer.sendChatMessage(HowManyFoxes.CONFIG.mpTimeNightCommand);
-      } else if (guibutton == this.buttonToggleRain) {
-         try {
-            if (this.mc.theWorld.worldInfo.getRaining()) {
-               this.mc.thePlayer.sendChatMessage(HowManyFoxes.CONFIG.mpRainOFFCommand);
-            } else {
-               this.mc.thePlayer.sendChatMessage(HowManyFoxes.CONFIG.mpRainONCommand);
-            }
-         } catch (IllegalArgumentException var5) {
-            var5.printStackTrace();
-         }
-      }
-   }
+            this.mc.thePlayer.inventory.setCursorStack(null);
+            return;
+        }
+    }
 
    @Override
    public void keyTyped(char c, int i) {

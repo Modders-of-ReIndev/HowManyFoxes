@@ -2,6 +2,7 @@ package com.fox2code.howmanyfoxes.hmi;
 
 import com.fox2code.howmanyfoxes.HMIClient;
 import com.fox2code.howmanyfoxes.HowManyFoxes;
+import com.fox2code.howmanyfoxes.hmi.overlay.GuiOverlay;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSmallButton;

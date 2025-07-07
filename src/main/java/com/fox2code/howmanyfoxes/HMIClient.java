@@ -3,6 +3,7 @@ package com.fox2code.howmanyfoxes;
 import com.fox2code.foxevents.EventHandler;
 import com.fox2code.foxloader.event.GlobalTickEvent;
 import com.fox2code.foxloader.event.client.CameraAndRenderUpdatedEvent;
+import com.fox2code.howmanyfoxes.hmi.overlay.IInventoryOverlayUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.gui.GuiScreen;
@@ -13,7 +14,7 @@ import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 import com.fox2code.howmanyfoxes.hmi.config.HMFKeyBinds;
-import com.fox2code.howmanyfoxes.hmi.GuiOverlay;
+import com.fox2code.howmanyfoxes.hmi.overlay.GuiOverlay;
 import com.fox2code.howmanyfoxes.hmi.GuiRecipeViewer;
 import com.fox2code.howmanyfoxes.hmi.TabUtils;
 import com.fox2code.howmanyfoxes.hmi.Utils;
@@ -149,6 +150,10 @@ public class HMIClient {
     public void runClickEvent() {
         if (Minecraft.getInstance().currentScreen != null && Minecraft.getInstance().currentScreen instanceof GuiContainer && !GuiOverlay.searchBoxFocused()) {
             HowManyFoxes.CONFIG.overlayEnabled = !HowManyFoxes.CONFIG.overlayEnabled;
+            //restore hidden inventory buttons
+            if (Minecraft.getInstance().currentScreen instanceof IInventoryOverlayUpdate update) {
+                update.pushTrigger(HowManyFoxes.CONFIG.overlayEnabled);
+            }
             HowManyFoxes.forceSaveConfig();
             if (this.overlay != null) {
                 this.overlay.toggle();

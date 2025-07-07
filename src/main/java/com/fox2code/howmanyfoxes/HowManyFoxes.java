@@ -8,7 +8,7 @@ import com.fox2code.foxloader.launcher.FoxLauncher;
 import com.fox2code.foxloader.loader.Mod;
 import com.fox2code.foxloader.loader.ModContainer;
 import com.fox2code.howmanyfoxes.hmi.config.HMFKeyBinds;
-import com.fox2code.howmanyfoxes.hmi.GuiOverlay;
+import com.fox2code.howmanyfoxes.hmi.overlay.GuiOverlay;
 import com.fox2code.howmanyfoxes.hmi.Utils;
 import com.fox2code.howmanyfoxes.hmi.config.HMIFoxedConfig;
 import com.fox2code.howmanyfoxes.hmi.tabs.TabLootHints;

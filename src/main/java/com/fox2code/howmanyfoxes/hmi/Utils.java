@@ -4,6 +4,7 @@ import com.fox2code.foxloader.registry.missing.MissingItem;
 import com.fox2code.foxloader.registry.missing.MissingItemBlock;
 import com.fox2code.howmanyfoxes.HMIClient;
 import com.fox2code.howmanyfoxes.hmi.config.DefaultHiddenItems;
+import com.fox2code.howmanyfoxes.hmi.overlay.GuiOverlay;
 import com.fox2code.howmanyfoxes.hmi.tabs.Tab;
 import com.indigo3d.util.RenderSystem;
 import net.minecraft.client.Minecraft;
