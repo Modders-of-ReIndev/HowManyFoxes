@@ -56,6 +56,15 @@ public class TabUtils {
       new RegisterTabsEvent(guiToBlock, tabList).callEvent();
    }
 
+    public static Tab getTabOfGuiScreen(GuiScreen screen) {
+        if (screen instanceof GuiRecipeViewer viewer) {
+            if (GuiRecipeViewer.tabs.get(viewer.tabIndex) instanceof TabLootHints tab) {
+                return tab;
+            }
+        }
+        return null;
+    }
+
    public static ItemStack getItemFromGui(GuiContainer screen) {
       return guiToBlock.get(screen.getClass());
    }

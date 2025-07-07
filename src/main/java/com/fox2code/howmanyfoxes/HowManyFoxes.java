@@ -7,10 +7,12 @@ import com.fox2code.foxloader.event.client.GuiItemInfoEvent;
 import com.fox2code.foxloader.launcher.FoxLauncher;
 import com.fox2code.foxloader.loader.Mod;
 import com.fox2code.foxloader.loader.ModContainer;
+import com.fox2code.howmanyfoxes.hmi.TabUtils;
 import com.fox2code.howmanyfoxes.hmi.config.HMFKeyBinds;
 import com.fox2code.howmanyfoxes.hmi.overlay.GuiOverlay;
 import com.fox2code.howmanyfoxes.hmi.Utils;
 import com.fox2code.howmanyfoxes.hmi.config.HMIFoxedConfig;
+import com.fox2code.howmanyfoxes.hmi.tabs.Tab;
 import com.fox2code.howmanyfoxes.hmi.tabs.TabLootHints;
 import net.minecraft.common.util.ChatColors;
 import net.minecraft.common.util.i18n.StringTranslate;
@@ -63,28 +65,10 @@ public class HowManyFoxes extends Mod {
 
     @EventHandler
     public void onAdditionalTooltipInfo(GuiItemInfoEvent event) {
-        if(!FoxLauncher.isClient()) {
-            return;
-        }
-
         //for loot hints
-        final TabLootHints tabLootHints = TabLootHints.tooltipHelper(event.getGuiScreen());
-        if(tabLootHints != null) {
-            if(tabLootHints.isAimedAtLoot(event.getItemStack())) {
-                int[] amount = tabLootHints.getPossibleAmountOf(event.getItemStack());
-                if(amount == null) {
-                    event.addDescriptionLine(StringTranslate.getInstance().translateKeyFormat("hmf.loothints.amount", 1));
-                } else if(amount.length == 1) {
-                    event.addDescriptionLine(StringTranslate.getInstance().translateKeyFormat("hmf.loothints.amount", amount[0]));
-                } else {
-                    event.addDescriptionLine(StringTranslate.getInstance().translateKeyFormat("hmf.loothints.amount.range", amount[0], amount[1]));
-                }
-
-                float chance = tabLootHints.getChanceOf(event.getItemStack());
-                if(chance != 0.0f) {
-                    event.addDescriptionLine(StringTranslate.getInstance().translateKeyFormat("hmf.loothints.chance", chance));
-                }
-            }
+        final Tab tab = TabUtils.getTabOfGuiScreen(event.getGuiScreen());
+        if(tab != null) {
+            tab.onAdditionalTooltipInfo(event);
         }
     }
 }

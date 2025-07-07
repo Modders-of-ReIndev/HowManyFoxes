@@ -1,9 +1,6 @@
 package com.fox2code.howmanyfoxes.hmi.tabs;
 
-import com.fox2code.howmanyfoxes.hmi.GuiRecipeViewer;
-import com.indigo3d.util.RenderSystem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import com.fox2code.foxloader.event.client.GuiItemInfoEvent;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.block.tileentity.TileEntityDungeonChest;
 import net.minecraft.common.entity.animals.EntityCucurboo;
@@ -272,6 +269,25 @@ public class TabLootHints extends TabWithTexture {
         return null;
     }
 
+    @Override
+    public void onAdditionalTooltipInfo(GuiItemInfoEvent event) {
+        if(this.isAimedAtLoot(event.getItemStack())) {
+            int[] amount = this.getPossibleAmountOf(event.getItemStack());
+            if(amount == null) {
+                event.addDescriptionLine(StringTranslate.getInstance().translateKeyFormat("hmf.loothints.amount", 1));
+            } else if(amount.length == 1) {
+                event.addDescriptionLine(StringTranslate.getInstance().translateKeyFormat("hmf.loothints.amount", amount[0]));
+            } else {
+                event.addDescriptionLine(StringTranslate.getInstance().translateKeyFormat("hmf.loothints.amount.range", amount[0], amount[1]));
+            }
+
+            float chance = this.getChanceOf(event.getItemStack());
+            if(chance != 0.0f) {
+                event.addDescriptionLine(StringTranslate.getInstance().translateKeyFormat("hmf.loothints.chance", chance));
+            }
+        }
+    }
+
     /**
      * Get a complete list of possible loots of each item/block
      */
@@ -341,19 +357,5 @@ public class TabLootHints extends TabWithTexture {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /*
-     * basic helper code for showing tooltip details
-     * based on basically checking if the current GUI points to this tab,
-     * returns null otherwise
-     */
-    public static TabLootHints tooltipHelper(GuiScreen screen) {
-        if (screen instanceof GuiRecipeViewer viewer) {
-            if (GuiRecipeViewer.tabs.get(viewer.tabIndex) instanceof TabLootHints tab) {
-                return tab;
-            }
-        }
-        return null;
     }
 }

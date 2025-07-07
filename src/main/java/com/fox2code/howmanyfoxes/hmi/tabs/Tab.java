@@ -1,5 +1,6 @@
 package com.fox2code.howmanyfoxes.hmi.tabs;
 
+import com.fox2code.foxloader.event.client.GuiItemInfoEvent;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.recipe.Ingredient;
 import net.minecraft.common.util.i18n.StringTranslate;
@@ -52,6 +53,8 @@ public abstract class Tab {
    }
 
    public abstract void draw(int var1, int var2, int var3, int var4, int var5);
+
+   public void onAdditionalTooltipInfo(GuiItemInfoEvent event) {}
 
    public String name() {
       return StringTranslate.getInstance().translateNamedKey(this.getTabItem().getItemName()).trim();
