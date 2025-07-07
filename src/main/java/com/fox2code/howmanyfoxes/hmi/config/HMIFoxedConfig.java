@@ -28,7 +28,7 @@ public class HMIFoxedConfig implements GuiConfigProviderConfigObject {
     public boolean showItemMod = true;
 
     @ConfigEntry
-    public String hiddenItems = HMIFoxedConfig.packHiddenItems(DefaultHiddenItems.DEFAULT_HIDDEN_ITEMS);
+    public String hiddenItems = "";
 
     @ConfigEntry
     public String tableIndexes = HMIFoxedConfig.packTabIndexes();
