@@ -10,7 +10,6 @@ import org.lwjgl.input.Keyboard;
 public class GuiControlsHMI extends GuiScreen {
    private GuiButton buttonDone;
    private int buttonId = -1;
-   private final GuiScreen parentScreen;
 
    public GuiControlsHMI(GuiScreen guiscreen) {
       this.parentScreen = guiscreen;

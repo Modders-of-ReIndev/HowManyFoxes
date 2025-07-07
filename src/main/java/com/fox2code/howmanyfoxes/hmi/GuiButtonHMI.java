@@ -9,18 +9,15 @@ import org.lwjgl.input.Keyboard;
 
 public class GuiButtonHMI extends GuiButton {
    public int iconIndex;
-   public boolean tmiStyle;
    private ItemStack item;
 
    public GuiButtonHMI(int id, int x, int y, int width, int height, String text) {
       super(id, x, y, width, height, text);
       this.iconIndex = -1;
-      this.tmiStyle = false;
    }
 
    public GuiButtonHMI(int id, int x, int y, int width, int iconIndex) {
       super(id, x, y, width, width, "");
-      this.tmiStyle = false;
       this.iconIndex = iconIndex;
    }
 

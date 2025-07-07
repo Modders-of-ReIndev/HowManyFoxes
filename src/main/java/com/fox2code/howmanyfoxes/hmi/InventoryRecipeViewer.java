@@ -10,11 +10,12 @@ import net.minecraft.common.item.ItemStack;
 import java.util.Stack;
 
 public class InventoryRecipeViewer implements IInventory, InventoryClientOnly {
-   public Stack<ItemStack> filter = new Stack<>();
-   public Stack<Tab> prevTabs = new Stack<>();
-   public Stack<Integer> prevPages = new Stack<>();
-   public Stack<Boolean> prevGetUses = new Stack<>();
-   public Tab currentTab = HMIClient.getTabs().get(0);
+   public final Stack<ItemStack> filter = new Stack<>();
+   public final Stack<Tab> prevTabs = new Stack<>();
+   public final Stack<Integer> prevPages = new Stack<>();
+   public final Stack<Boolean> prevGetUses = new Stack<>();
+
+   public Tab currentTab = HMIClient.getTabs().getFirst();
    public Boolean newList = true;
    public int index;
    public ItemStack[][] items;
