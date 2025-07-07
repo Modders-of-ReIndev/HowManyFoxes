@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.creative.ContainerCreative;
 import net.minecraft.client.gui.creative.CreativeTabs;
+import net.minecraft.common.entity.player.EntityPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -25,36 +26,41 @@ public class OverlayUtilityButtons {
         return Minecraft.getInstance().theWorld.isRemote;
     }
 
+    private boolean showCheatButtons() {
+        EntityPlayer entityPlayer = Minecraft.getInstance().thePlayer;
+        return entityPlayer.isOp() && (entityPlayer.capabilities.isCreativeMode || HowManyFoxes.CONFIG.cheatsEnabled);
+    }
+
     public void initButtons(List<GuiElement> parentControlList, GuiContainer<?> screen, int beginID) {
         final boolean multiplayer = this.isMultiplayerWorld();
         int begin = 0;
 
-        if (!multiplayer || !HowManyFoxes.CONFIG.mpTimeDayCommand.isEmpty()) {
-            parentControlList.add(this.buttonTimeDay = new GuiButtonHMI(beginID++, (begin++) * 20, 0, 20, 12));
-        }
+        if (this.showCheatButtons()) {
+            if (!multiplayer || !HowManyFoxes.CONFIG.mpTimeDayCommand.isEmpty()) {
+                parentControlList.add(this.buttonTimeDay = new GuiButtonHMI(beginID++, (begin++) * 20, 0, 20, 12));
+            }
 
-        if (!multiplayer || !HowManyFoxes.CONFIG.mpTimeNightCommand.isEmpty()) {
-            parentControlList.add(this.buttonTimeNight = new GuiButtonHMI(beginID++, (begin++) * 20, 0, 20, 13));
-        }
+            if (!multiplayer || !HowManyFoxes.CONFIG.mpTimeNightCommand.isEmpty()) {
+                parentControlList.add(this.buttonTimeNight = new GuiButtonHMI(beginID++, (begin++) * 20, 0, 20, 13));
+            }
 
-        if (!multiplayer || !HowManyFoxes.CONFIG.mpRainOFFCommand.isEmpty() || !HowManyFoxes.CONFIG.mpRainONCommand.isEmpty()) {
-            parentControlList.add(this.buttonToggleRain = new GuiButtonHMI(beginID++, (begin++) * 20, 0, 20, 14));
+            if (!multiplayer || !HowManyFoxes.CONFIG.mpRainOFFCommand.isEmpty() || !HowManyFoxes.CONFIG.mpRainONCommand.isEmpty()) {
+                parentControlList.add(this.buttonToggleRain = new GuiButtonHMI(beginID++, (begin++) * 20, 0, 20, 14));
+            }
         }
 
         if (!multiplayer && Minecraft.getInstance().playerController.isInCreativeMode() && ((screen instanceof GuiContainerInventory) || (screen instanceof GuiContainerCreative))) {
             parentControlList.add(this.buttonToggleMode = new GuiButtonHMI(beginID++, (begin++) * 20, 0, 20, 16));
         }
 
-        if (!multiplayer || !HowManyFoxes.CONFIG.mpHealCommand.isEmpty()) {
-            parentControlList.add(this.buttonHeal = new GuiButtonHMI(beginID++, (begin++) * 20, 0, 20, 15));
+        if (this.showCheatButtons()) {
+            if (!multiplayer || !HowManyFoxes.CONFIG.mpHealCommand.isEmpty()) {
+                parentControlList.add(this.buttonHeal = new GuiButtonHMI(beginID++, (begin++) * 20, 0, 20, 15));
+            }
         }
     }
 
     public @Nullable String getTooltipFor(Minecraft mc, float mouseX, float mouseY) {
-        if (!HowManyFoxes.CONFIG.cheatsEnabled || this.isMultiplayerWorld()) {
-            return null;
-        }
-
         if (this.buttonTimeDay != null && this.buttonTimeDay.mousePressed(mc, mouseX, mouseY)) {
             return "Set time to day";
         }

@@ -7,9 +7,12 @@ import com.fox2code.howmanyfoxes.hmi.config.DefaultHiddenItems;
 import com.fox2code.howmanyfoxes.hmi.config.HMFKeyBinds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.inventory.ContainerWrapped;
+import net.minecraft.client.player.EntityClientPlayerMP;
 import net.minecraft.common.block.container.Slot;
 import net.minecraft.common.entity.player.InventoryPlayer;
 import net.minecraft.common.item.ItemStack;
+import net.minecraft.common.networking.Packet107CreativeSetSlot;
 import net.minecraft.common.util.ChatAllowedCharacters;
 import net.minecraft.common.util.i18n.StringTranslate;
 import org.lwjgl.input.Keyboard;
@@ -75,53 +78,55 @@ public class GuiOverlay extends GuiScreen {
 
    @Override
    public void initGui() {
-      if (this.mc.currentScreen == this) {
-         screen.setWorldAndResolution(this.mc, this.width, this.height);
-      }
-      try {
-         this.xSize = screen.getXSize();
-         this.ySize = screen.getYSize();
-      } catch (Exception var7) {
-         var7.printStackTrace();
-      }
+       if (this.mc.currentScreen == this) {
+           screen.setWorldAndResolution(this.mc, this.width, this.height);
+       }
+       try {
+           this.xSize = screen.getXSize();
+           this.ySize = screen.getYSize();
+       } catch (Exception var7) {
+           var7.printStackTrace();
+       }
 
-      this.controlList.clear();
-      int k = (screen.width - this.xSize) / 2 + 1;
-      String search = "";
-      if (searchBox != null) {
-         search = searchBox.getText();
-      }
+       this.controlList.clear();
+       int k = (screen.width - this.xSize) / 2 + 1;
+       String search = "";
+       if (searchBox != null) {
+           search = searchBox.getText();
+       }
 
-      int searchBoxX = k + this.xSize + 1;
-      int searchBoxWidth = screen.width - k - this.xSize - 20 - 2;
-      if (HowManyFoxes.CONFIG.centredSearchBar) {
-         searchBoxX -= this.xSize;
-         searchBoxWidth = this.xSize - 20 - 3;
-      }
+       int searchBoxX = k + this.xSize + 1;
+       int searchBoxWidth = screen.width - k - this.xSize - 20 - 2;
+       if (HowManyFoxes.CONFIG.centredSearchBar) {
+           searchBoxX -= this.xSize;
+           searchBoxWidth = this.xSize - 20 - 3;
+       }
 
-        int id = 0;
-        (searchBox = new GuiTextFieldHMI(searchBoxX, screen.height - 20 + 1, searchBoxWidth, 16, search))
-                .setMaxStringLength((searchBoxWidth - 10) / 6);
-        this.controlList.add(this.buttonOptions = new GuiButtonHMI(
-                id++, searchBoxX + searchBoxWidth + 1, screen.height - 20 - 1, 20,
-                HowManyFoxes.CONFIG.cheatsEnabled ? 1 : 0, this.guiBlock));
-        this.controlList.add(this.buttonNextPage = new GuiButtonHMI(
-                id++, screen.width - (screen.width - k - this.xSize) / 3, 0,
-                (screen.width - k - this.xSize) / 3, 20, "Next"));
-        this.controlList.add(this.buttonPrevPage = new GuiButtonHMI(
-                id++, k + this.xSize, 0,
-                (screen.width - k - this.xSize) / 3, 20, "Prev"));
-        if (HowManyFoxes.CONFIG.cheatsEnabled) {
-            if (!this.mc.theWorld.isRemote) {
-                this.controlList.add(this.buttonTrash = new GuiButtonHMI(id++, 0, screen.height - 20 - 1, 60, 20, "Trash"));
-            }
-            utilityButtons.initButtons(this.controlList, screen, id);
-        }
-    }
+       int id = 0;
+       (searchBox = new GuiTextFieldHMI(searchBoxX, screen.height - 20 + 1, searchBoxWidth, 16, search))
+               .setMaxStringLength((searchBoxWidth - 10) / 6);
+       this.controlList.add(this.buttonOptions = new GuiButtonHMI(
+               id++, searchBoxX + searchBoxWidth + 1, screen.height - 20 - 1, 20,
+               HowManyFoxes.CONFIG.cheatsEnabled ? 1 : 0, this.guiBlock));
+       this.controlList.add(this.buttonNextPage = new GuiButtonHMI(
+               id++, screen.width - (screen.width - k - this.xSize) / 3, 0,
+               (screen.width - k - this.xSize) / 3, 20, "Next"));
+       this.controlList.add(this.buttonPrevPage = new GuiButtonHMI(
+               id++, k + this.xSize, 0,
+               (screen.width - k - this.xSize) / 3, 20, "Prev"));
+
+       if (((this.mc.thePlayer.capabilities.isCreativeMode && this.mc.thePlayer.playerContainer ==
+               ContainerWrapped.getNetworkContainer(this.mc.thePlayer.currentContainer)) ||
+               (this.mc.thePlayer.isOp() && HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote)) &&
+               !(this.mc.currentScreen instanceof GuiRecipeViewer)) {
+           this.controlList.add(this.buttonTrash = new GuiButtonHMI(id++, 0, screen.height - 20 - 1, 60, 20, "Trash"));
+       }
+       utilityButtons.initButtons(this.controlList, screen, id);
+   }
 
    @Override
    public void drawScreen(float mouseX, float mouseY, float deltaTicks) {
-      boolean shiftHeld = Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54);
+      boolean shiftHeld = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
       if (shiftHeld && !HMIClient.getTabs().isEmpty()) {
          this.buttonOptions.iconIndex = 2;
          if (this.buttonTrash != null) {
@@ -472,7 +477,7 @@ public class GuiOverlay extends GuiScreen {
                   .setCursorStack(this.mc.thePlayer.inventory.getCursorStack().splitStack(
                           this.mc.thePlayer.inventory.getCursorStack().stackSize - 1));
             }
-         } else if (HowManyFoxes.CONFIG.cheatsEnabled
+         } else if (this.buttonTrash != null
             && !this.mc.theWorld.isRemote
             && this.buttonTrash.mousePressed(this.mc, posX, posY)
             && this.mc.thePlayer.inventory.getCursorStack() != null
@@ -548,7 +553,7 @@ public class GuiOverlay extends GuiScreen {
                 return;
             }
             //remove the selected button
-            if (shiftHeld) {
+            if (shiftHeld && !this.mc.theWorld.isRemote) {
                 for (int i = 0; i < screen.inventorySlots.slots.size(); ++i) {
                     Slot slot = screen.inventorySlots.slots.get(i);
                     if (slot.getHasStack() && slot.getStack().isItemEqual(
@@ -561,6 +566,10 @@ public class GuiOverlay extends GuiScreen {
             }
 
             this.mc.thePlayer.inventory.setCursorStack(null);
+            if (this.mc.theWorld.isRemote &&
+                    this.mc.thePlayer instanceof EntityClientPlayerMP entityClientPlayerMP) {
+                entityClientPlayerMP.sendQueue.addToSendQueue(new Packet107CreativeSetSlot(-1000, null));
+            }
             return;
         }
     }
