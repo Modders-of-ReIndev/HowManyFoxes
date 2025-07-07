@@ -8,14 +8,13 @@ import com.fox2code.foxloader.launcher.FoxLauncher;
 import com.fox2code.foxloader.loader.Mod;
 import com.fox2code.foxloader.loader.ModContainer;
 import com.fox2code.howmanyfoxes.hmi.TabUtils;
+import com.fox2code.howmanyfoxes.hmi.config.DefaultHiddenItems;
 import com.fox2code.howmanyfoxes.hmi.config.HMFKeyBinds;
 import com.fox2code.howmanyfoxes.hmi.overlay.GuiOverlay;
 import com.fox2code.howmanyfoxes.hmi.Utils;
 import com.fox2code.howmanyfoxes.hmi.config.HMIFoxedConfig;
 import com.fox2code.howmanyfoxes.hmi.tabs.Tab;
-import com.fox2code.howmanyfoxes.hmi.tabs.TabLootHints;
 import net.minecraft.common.util.ChatColors;
-import net.minecraft.common.util.i18n.StringTranslate;
 
 import java.util.logging.Logger;
 
@@ -33,15 +32,21 @@ public class HowManyFoxes extends Mod {
         CONTAINER = this.getModContainer();
         if (FoxLauncher.isClient()) {
             this.setConfigObject(CONFIG);
-            //read additional stuff
-            GuiOverlay.hiddenItems = HMIFoxedConfig.unpackHiddenItems(CONFIG.hiddenItems);
+            if (CONFIG.hiddenItems.isEmpty()) {
+                GuiOverlay.hiddenItems = DefaultHiddenItems.DEFAULT_HIDDEN_ITEMS;
+                GuiOverlay.hiddenItemsModified = false;
+            } else {
+                GuiOverlay.hiddenItems = HMIFoxedConfig.unpackHiddenItems(CONFIG.hiddenItems);
+                GuiOverlay.hiddenItemsModified = true;
+            }
             HMIFoxedConfig.unpackTabIndexes(CONFIG.tableIndexes);
             HMFKeyBinds.register();
         }
     }
 
     public static void forceSaveConfig() {
-        CONFIG.hiddenItems = HMIFoxedConfig.packHiddenItems(GuiOverlay.hiddenItems);
+        CONFIG.hiddenItems = GuiOverlay.hiddenItemsModified ?
+                HMIFoxedConfig.packHiddenItems(GuiOverlay.hiddenItems) : "";
         CONFIG.tableIndexes = HMIFoxedConfig.packTabIndexes();
         ConfigIO.writeConfiguration(CONTAINER, CONFIG);
     }
