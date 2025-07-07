@@ -41,7 +41,7 @@ public class OverlayUtilityButtons {
             parentControlList.add(this.buttonToggleRain = new GuiButtonHMI(beginID++, (begin++) * 20, 0, 20, 14));
         }
 
-        if (!multiplayer && ((screen instanceof GuiContainerInventory) || (screen instanceof GuiContainerCreative))) {
+        if (!multiplayer && Minecraft.getInstance().playerController.isInCreativeMode() && ((screen instanceof GuiContainerInventory) || (screen instanceof GuiContainerCreative))) {
             parentControlList.add(this.buttonToggleMode = new GuiButtonHMI(beginID++, (begin++) * 20, 0, 20, 16));
         }
 
