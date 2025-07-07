@@ -18,7 +18,7 @@ import java.util.logging.Level;
 public class GuiRecipeViewer extends GuiContainer<ContainerRecipeViewer> {
    public static final int RECIPE_VIEWER_DEFAULT_WIDTH = 251;
    public static final int RECIPE_VIEWER_DEFAULT_HEIGHT = 134;
-
+   
    private boolean dragging;
    private float cursorPosX;
    private float cursorPosY;

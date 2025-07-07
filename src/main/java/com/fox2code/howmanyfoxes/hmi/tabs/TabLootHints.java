@@ -165,6 +165,11 @@ public class TabLootHints extends TabWithTexture {
             if (k < sets.length) {
                 final ItemStack[] data = sets[k];
                 items[j][0] = currentLoot.resourceItem;
+                for (ItemStack itemStack : data) {
+                    if (itemStack.stackSize == 0) {
+                        itemStack.stackSize = 1;
+                    }
+                }
                 System.arraycopy(data, 0, items[j], 1, data.length);
             }
 
@@ -224,8 +229,15 @@ public class TabLootHints extends TabWithTexture {
         }
 
         for (LootTableEntry entry : currentLoot.lootTable.getLootTableEntries()) {
-            if (entry.getItemStack().getItemDamage() == stack.getItemDamage() && entry.getItemStack().getItemID() == stack.getItemID()) {
-                return Math.round(10000F * (entry.getItemWeight() / (float) currentLoot.totalWeight)) / 100F;
+            if (entry.getItemStack().getItemDamage() == stack.getItemDamage() &&
+                    entry.getItemStack().getItemID() == stack.getItemID()) {
+                double weightReducer = 1D;
+                if (entry.getMinimumDropQuantity() == 0) {
+                    weightReducer = 1D - (1D / entry.getRandomDropQuantity());
+                }
+
+                return Math.round(10000F * weightReducer *
+                        (entry.getItemWeight() / (float) currentLoot.totalWeight)) / 100F;
             }
         }
 
@@ -245,9 +257,14 @@ public class TabLootHints extends TabWithTexture {
                     };
                 }
 
+                int offset = 0;
+                if (entry.getMinimumDropQuantity() == 0) {
+                    offset = 1;
+                }
+
                 return new int[]{
-                        entry.getMinimumDropQuantity(),
-                        entry.getMinimumDropQuantity() + entry.getRandomDropQuantity()
+                        entry.getMinimumDropQuantity() + offset,
+                        entry.getMinimumDropQuantity() + entry.getRandomDropQuantity() - offset
                 };
             }
         }
