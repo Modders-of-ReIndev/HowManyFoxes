@@ -1,6 +1,8 @@
 package com.fox2code.howmanyfoxes.hmi.tabs;
 
 import com.fox2code.howmanyfoxes.hmi.GuiRecipeViewer;
+import com.indigo3d.util.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.block.tileentity.TileEntityDungeonChest;
@@ -35,7 +37,9 @@ public class TabLootHints extends TabWithTexture {
             for (int i = 0; i < lootTable.getLootTableEntries().size(); i++) {
                 weight_accumulation += lootTable.getLootTableEntries().get(i).getItemWeight();
             }
-            this.totalWeight = weight_accumulation;
+
+            //I simply make sure it won't divide by 0 at the end lmao
+            this.totalWeight = (weight_accumulation == 0) ? 1 : weight_accumulation;
         }
 
         public FancyPackedLoot(ItemStack resourceItem, LootTable lootTable) {
@@ -114,6 +118,7 @@ public class TabLootHints extends TabWithTexture {
 
     private final FancyPackedLoot currentLoot;
     private final ItemStack[] possibleLoot;
+    private final String title;
 
     public TabLootHints(String tabCreator, FancyPackedLoot currentLoot) {
         super(
@@ -126,6 +131,7 @@ public class TabLootHints extends TabWithTexture {
         );
         this.currentLoot = currentLoot;
         this.possibleLoot = this.currentLoot.getLootAsArray();
+        this.title = StringTranslate.getInstance().translateKeyFormat("hmf.loothints.title", this.currentLoot.getDisplayItemStack().getDisplayName());
 
         //input slot
         this.slots[0] = new Integer[]{55, 4};
@@ -134,6 +140,11 @@ public class TabLootHints extends TabWithTexture {
         for (int i = 0; i < 28; i++) {
             this.slots[i + 1] = new Integer[]{1 + (i % 7) * 18, 40 + (i / 7) * 18};
         }
+    }
+
+    @Override
+    public String name() {
+        return this.title;
     }
 
     @Override

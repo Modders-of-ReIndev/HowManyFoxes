@@ -7,6 +7,7 @@ key.hmf.focus-search=Focus Search
 key.hmf.toggle-hmf=Toggle HMF
 
 # loot hint tooltip details
+hmf.loothints.title=§eLoot of §r%s
 hmf.loothints.amount=§eAmount: §b%s
 hmf.loothints.amount.range=§eAmount: §b%s§e-§b%s
 hmf.loothints.chance=§eChance: §b%s%
