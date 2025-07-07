@@ -33,6 +33,12 @@ public class TabUtils {
       Tab carpentryTab = new TabCarpentry(mod);
       tabList.add(carpentryTab);
       guiToBlock.put(GuiContainerCarpentryTable.class, new ItemStack(Blocks.CARPENTRY_TABLE));
+
+      for(TabLootHints.FancyPackedLoot packedLoot : TabLootHints.fetchKnownLootDetails()) {
+         Tab lootHintTab = new TabLootHints(mod, packedLoot);
+         tabList.add(lootHintTab);
+      }
+
       new RegisterTabsEvent(guiToBlock, tabList).callEvent();
    }
 
