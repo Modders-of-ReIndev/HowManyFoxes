@@ -12,7 +12,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
-import com.fox2code.howmanyfoxes.hmi.HMFKeyBinds;
+import com.fox2code.howmanyfoxes.hmi.config.HMFKeyBinds;
 import com.fox2code.howmanyfoxes.hmi.GuiOverlay;
 import com.fox2code.howmanyfoxes.hmi.GuiRecipeViewer;
 import com.fox2code.howmanyfoxes.hmi.TabUtils;

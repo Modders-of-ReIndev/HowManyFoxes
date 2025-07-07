@@ -1,8 +1,9 @@
-package com.fox2code.howmanyfoxes.hmi;
+package com.fox2code.howmanyfoxes.hmi.config;
 
+import com.fox2code.foxloader.client.KeyBindingAPI;
 import net.minecraft.client.util.KeyBinding;
 
-public class HMFKeyBinds {
+public final class HMFKeyBinds {
     public static final KeyBinding KEY_GET_RECIPES = new KeyBinding("key.hmf.get-recipes", 19);
     public static final KeyBinding KEY_GET_USES = new KeyBinding("key.hmf.get-uses", 22);
     public static final KeyBinding KEY_PREV_RECIPE = new KeyBinding("key.hmf.previous-Recipe", 14);
@@ -15,4 +16,11 @@ public class HMFKeyBinds {
             HMFKeyBinds.KEY_GET_RECIPES, HMFKeyBinds.KEY_GET_USES, HMFKeyBinds.KEY_PREV_RECIPE, HMFKeyBinds.KEY_ALL_RECIPES,
             HMFKeyBinds.KEY_CLEAR_SEARCHBOX, HMFKeyBinds.KEY_FOCUS_SEARCHBOX, HMFKeyBinds.KEY_TOGGLE_OVERLAY
     };
+
+    //register keybinds here
+    public static void register() {
+        for (KeyBinding keyBinding : HMFKeyBinds.HMF_KEYBINDS) {
+            KeyBindingAPI.registerKeyBinding(keyBinding);
+        }
+    }
 }

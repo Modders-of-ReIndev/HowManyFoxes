@@ -1,7 +1,8 @@
-package com.fox2code.howmanyfoxes;
+package com.fox2code.howmanyfoxes.hmi.config;
 
 import com.fox2code.foxloader.client.gui.GuiConfigProviderConfigObject;
 import com.fox2code.foxloader.config.ConfigEntry;
+import com.fox2code.howmanyfoxes.HMIClient;
 import com.fox2code.howmanyfoxes.hmi.GuiOptionsHMI;
 import com.fox2code.howmanyfoxes.hmi.GuiRecipeViewer;
 import com.fox2code.howmanyfoxes.hmi.Utils;
@@ -34,7 +35,7 @@ public class HMIFoxedConfig implements GuiConfigProviderConfigObject {
     public boolean showItemMod = false;
 
     @ConfigEntry
-    public String hiddenItems = HMIFoxedConfig.packHiddenItems(Utils.hiddenItems);
+    public String hiddenItems = HMIFoxedConfig.packHiddenItems(DefaultHiddenItems.DEFAULT_HIDDEN_ITEMS);
 
     @ConfigEntry
     public String tableIndexes = HMIFoxedConfig.packTabIndexes();

@@ -2,6 +2,8 @@ package com.fox2code.howmanyfoxes.hmi;
 
 import com.fox2code.howmanyfoxes.HMIClient;
 import com.fox2code.howmanyfoxes.HowManyFoxes;
+import com.fox2code.howmanyfoxes.hmi.config.DefaultHiddenItems;
+import com.fox2code.howmanyfoxes.hmi.config.HMFKeyBinds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.common.block.container.Slot;
@@ -56,7 +58,7 @@ public class GuiOverlay extends GuiScreen {
       this.draggingFrom = null;
       this.modTickKeyPress = false;
       if (hiddenItems == null) {
-         hiddenItems = new ArrayList<>(Utils.hiddenItems);
+         hiddenItems = new ArrayList<>(DefaultHiddenItems.DEFAULT_HIDDEN_ITEMS);
       }
 
       if (currentItems == null) {

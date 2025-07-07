@@ -1,18 +1,17 @@
 package com.fox2code.howmanyfoxes;
 
 import com.fox2code.foxevents.EventHandler;
-import com.fox2code.foxloader.client.KeyBindingAPI;
 import com.fox2code.foxloader.config.ConfigIO;
 import com.fox2code.foxloader.event.FoxLoaderEvents;
 import com.fox2code.foxloader.event.client.GuiItemInfoEvent;
 import com.fox2code.foxloader.launcher.FoxLauncher;
 import com.fox2code.foxloader.loader.Mod;
 import com.fox2code.foxloader.loader.ModContainer;
-import com.fox2code.howmanyfoxes.hmi.HMFKeyBinds;
+import com.fox2code.howmanyfoxes.hmi.config.HMFKeyBinds;
 import com.fox2code.howmanyfoxes.hmi.GuiOverlay;
 import com.fox2code.howmanyfoxes.hmi.Utils;
+import com.fox2code.howmanyfoxes.hmi.config.HMIFoxedConfig;
 import com.fox2code.howmanyfoxes.hmi.tabs.TabLootHints;
-import net.minecraft.client.util.KeyBinding;
 import net.minecraft.common.util.ChatColors;
 import net.minecraft.common.util.i18n.StringTranslate;
 
@@ -35,11 +34,7 @@ public class HowManyFoxes extends Mod {
             //read additional stuff
             GuiOverlay.hiddenItems = HMIFoxedConfig.unpackHiddenItems(CONFIG.hiddenItems);
             HMIFoxedConfig.unpackTabIndexes(CONFIG.tableIndexes);
-
-            //register keybinds here
-            for (KeyBinding keyBinding : HMFKeyBinds.HMF_KEYBINDS) {
-                KeyBindingAPI.registerKeyBinding(keyBinding);
-            }
+            HMFKeyBinds.register();
         }
     }
 

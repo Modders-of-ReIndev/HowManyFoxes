@@ -1,6 +1,7 @@
 package com.fox2code.howmanyfoxes.hmi;
 
 import com.fox2code.howmanyfoxes.HMIClient;
+import com.fox2code.howmanyfoxes.hmi.config.HMFKeyBinds;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSmallButton;

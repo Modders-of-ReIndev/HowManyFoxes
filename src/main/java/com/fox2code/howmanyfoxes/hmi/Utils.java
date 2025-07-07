@@ -4,18 +4,16 @@ import com.fox2code.foxloader.registry.missing.MissingItem;
 import com.fox2code.foxloader.registry.missing.MissingItemBlock;
 import com.fox2code.howmanyfoxes.HMIClient;
 import com.fox2code.howmanyfoxes.HowManyFoxes;
+import com.fox2code.howmanyfoxes.hmi.config.DefaultHiddenItems;
 import com.fox2code.howmanyfoxes.hmi.tabs.Tab;
 import com.indigo3d.util.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiContainer;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.creative.CreativeTabAllItems;
 import net.minecraft.client.gui.creative.CreativeTabs;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.world.RenderHelper;
-import net.minecraft.common.block.Blocks;
-import net.minecraft.common.block.children.BlockGearConveyorBelt;
 import net.minecraft.common.block.container.Slot;
 import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
@@ -36,7 +34,6 @@ public class Utils {
    public static RenderItem itemRenderer = new RenderItem();
    public static Random rand = new Random();
    public static final Gui gui = new Gui();
-   public static ArrayList<ItemStack> hiddenItems = new ArrayList<>();
    private static boolean itemLighting;
    static boolean localTextureBound;
    public static Boolean lighting;
@@ -96,7 +93,7 @@ public class Utils {
          ArrayList<ItemStack> allItemsTmp = new ArrayList<>();
          Item[] mcItemsList = Items.ITEMS_LIST;
          ArrayList<ItemStack> hiddenItems = GuiOverlay.hiddenItems;
-         if (hiddenItems == null) hiddenItems = Utils.hiddenItems;
+         if (hiddenItems == null) hiddenItems = DefaultHiddenItems.DEFAULT_HIDDEN_ITEMS;
 
          for(Item item : mcItemsList) {
             if (item != null && item.itemID != 0 &&
@@ -338,37 +335,4 @@ public class Utils {
       enableLighting();
    }
 
-   static {
-      short[] a = new short[]{
-              26, 34, 59, 63, 64, 68, 71, 75, 10, 8, 28,
-              23, 22, 36, 51, 69, 76, 119, 120, 121,
-              147, 148, 162, 163, 165, 164, 185, 181,
-              182, 198, 356, 357, 331, 381, 360, 1019,
-              1002, 1001, 183, 184, 109, 112,
-              83, 156, 157, 212, 1048, 1058, 1084,
-              1085, 1086, 1162, 1164, 1165, 1172, 1174,
-              1175, 1294, 1296, 1297, 1411, 1413, 1414,
-              1697, 1698, 1699, 1700, 1701, 1702, 1703,
-              1704, 1705, 1706, 1707, 1708, 1709, 1710,
-              1711, 1712, 1713, 1714, 1715, 1716, 1729,
-              1738, 1748, 1756, 1757, 1758, 1759, 1760,
-              1761, 1771,
-      };
-      short[][] b = new short[][]{
-              {360, 0}, {100, 2}, {116, 3}, {130, 4}, {178, 2}, {130, 3},
-              {135, 0}, {135, 1}, {135, 2}, {98, 2}, {44, 0}, {44, 1}, {44, 2}
-      };
-
-      for(short n : a) {
-         hiddenItems.add(n < 256 ?
-                 new ItemStack(Blocks.BLOCKS_LIST[n], 1, -1) :
-                 new ItemStack(Items.ITEMS_LIST[n], 1, -1));
-      }
-
-      for(short[] n2 : b) {
-         hiddenItems.add(n2[0] < 256 ?
-                 new ItemStack(Blocks.BLOCKS_LIST[n2[0]], 1, n2[1]) :
-                 new ItemStack(Items.ITEMS_LIST[n2[0]], 1, n2[1]));
-      }
-   }
 }
