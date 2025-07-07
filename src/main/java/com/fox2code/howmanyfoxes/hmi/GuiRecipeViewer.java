@@ -269,16 +269,16 @@ public class GuiRecipeViewer extends GuiContainer<ContainerRecipeViewer> {
       if (item != null && this.mc.thePlayer.inventory.getCursorStack() == null) {
          this.push(item, k == 1);
       } else if (HowManyFoxes.CONFIG.recipeViewerDraggableGui
-         && posX - this.xSize + 10 > x
-         && posX - this.xSize - 4 < x
-         && posY - this.ySize + 10 > y
-         && posY - this.ySize - 4 < y
-         && k == 0
-         && !this.dragging) {
+              && posX - this.xSize + 10 > x
+              && posX - this.xSize - 4 < x
+              && posY - this.ySize + 10 > y
+              && posY - this.ySize - 4 < y
+              && k == 0
+              && !this.dragging) {
          this.dragging = true;
       } else if (posX > x && posX < x + this.xSize && posY > y + 4 && posY < y + this.ySize + 4) {
          if (k == 0) {
-            for(GuiButton button : this.buttons()) {
+            for (GuiButton button : this.buttons()) {
                if (button.mousePressed(this.mc, posX, posY)) {
                   this.mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
                   this.actionPerformed(button);
@@ -299,7 +299,7 @@ public class GuiRecipeViewer extends GuiContainer<ContainerRecipeViewer> {
       } else {
          int tabCount = 0;
 
-         for(int z = this.tabPage; z < tabs.size() && (tabCount + 1) * 27 < this.xSize; ++z) {
+         for (int z = this.tabPage; z < tabs.size() && (tabCount + 1) * 27 < this.xSize; ++z) {
             if (tabs.get(z).size > 0) {
                if (posX - tabCount * 27 + 1 > x && posX - (tabCount + 1) * 27 < x && posY + 21 > y && posY - 3 < y && k == 0 && this.tabIndex != z) {
                   this.newTab(tabs.get(z));
@@ -307,6 +307,18 @@ public class GuiRecipeViewer extends GuiContainer<ContainerRecipeViewer> {
                }
 
                ++tabCount;
+            }
+         }
+      }
+
+      if (k == 0 && item == null) {
+         for (GuiElement guiElement : this.controlList) {
+            GuiElement element;
+            if ((element = guiElement).mousePressed(this.mc, posX, posY)) {
+               if (element instanceof GuiButton button) {
+                  this.mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+                  this.actionPerformed(button);
+               }
             }
          }
       }
@@ -426,10 +438,7 @@ public class GuiRecipeViewer extends GuiContainer<ContainerRecipeViewer> {
 
    @Override
    protected void actionPerformed(GuiButton guibutton) {
-      if (guibutton.id - 1 < inv.items.length && tabs.get(this.tabIndex) instanceof TabWithTexture tabWithTexture) {
-         this.displayParent();
-         tabWithTexture.setupRecipe(this.parent, inv.items[guibutton.id - 1]);
-      } else if (guibutton.id == -1) {
+      if (guibutton.id == -1) {
          this.tabPage += this.xSize / 27;
          if (this.tabPage >= tabs.size()) {
             this.tabPage -= this.xSize / 27;
@@ -439,6 +448,9 @@ public class GuiRecipeViewer extends GuiContainer<ContainerRecipeViewer> {
          if (this.tabPage < 0) {
             this.tabPage = 0;
          }
+      } else if (guibutton.id - 1 < inv.items.length && tabs.get(this.tabIndex) instanceof TabWithTexture tabWithTexture) {
+         this.displayParent();
+         tabWithTexture.setupRecipe(this.parent, inv.items[guibutton.id - 1]);
       }
    }
 
