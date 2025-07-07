@@ -6,6 +6,7 @@ import com.fox2code.foxloader.event.client.CameraAndRenderUpdatedEvent;
 import com.fox2code.howmanyfoxes.hmi.overlay.IInventoryOverlayUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiContainer;
+import net.minecraft.client.gui.GuiContainerCreative;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.common.item.ItemStack;
@@ -104,7 +105,10 @@ public class HMIClient {
                         GuiOverlay.focusSearchBox();
                     }
                 } else if (Keyboard.isKeyDown(HMFKeyBinds.KEY_ALL_RECIPES.keyCode)) {
-                    pushRecipe(guiscreen, null, false);
+                    // TODO: Find out if a text field is in focus?
+                    if (!(Minecraft.getInstance().currentScreen instanceof GuiContainerCreative)) {
+                        pushRecipe(guiscreen, null, false);
+                    }
                 } else {
                     keyHeldLastTick = false;
                 }
@@ -162,6 +166,7 @@ public class HMIClient {
     }
 
     public static void pushRecipe(GuiScreen gui, ItemStack item, boolean getUses) {
+        new Throwable().printStackTrace();
         Minecraft mc = Minecraft.theMinecraft;
         if (mc.thePlayer.inventory.getCursorStack() == null) {
             if (gui instanceof GuiRecipeViewer) {
