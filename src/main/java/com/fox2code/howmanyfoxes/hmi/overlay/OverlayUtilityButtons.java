@@ -100,12 +100,16 @@ public class OverlayUtilityButtons {
         }
 
         //heal
-        if (!mc.theWorld.isRemote && button == this.buttonHeal) {
-            mc.thePlayer.heal(100);
-            mc.thePlayer.air = 300;
-            if (mc.thePlayer.isBurning()) {
-                mc.thePlayer.fire = -mc.thePlayer.fireResistance;
-                mc.theWorld.playSoundAtEntity(mc.thePlayer, "random.fizz", 0.7F, 1.6F + (Utils.rand.nextFloat() - Utils.rand.nextFloat()) * 0.4F);
+        if (button == this.buttonHeal) {
+            if(this.isMultiplayerWorld()) {
+                mc.thePlayer.sendChatMessage(HowManyFoxes.CONFIG.mpHealCommand);
+            } else {
+                mc.thePlayer.heal(100);
+                mc.thePlayer.air = 300;
+                if (mc.thePlayer.isBurning()) {
+                    mc.thePlayer.fire = -mc.thePlayer.fireResistance;
+                    mc.theWorld.playSoundAtEntity(mc.thePlayer, "random.fizz", 0.7F, 1.6F + (Utils.rand.nextFloat() - Utils.rand.nextFloat()) * 0.4F);
+                }
             }
             return true;
         }
