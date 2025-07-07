@@ -25,7 +25,7 @@ public class HMIFoxedConfig implements GuiConfigProviderConfigObject {
     public boolean cheatsEnabled = false;
 
     @ConfigEntry
-    public boolean showItemMod = false;
+    public boolean showItemMod = true;
 
     @ConfigEntry
     public String hiddenItems = HMIFoxedConfig.packHiddenItems(DefaultHiddenItems.DEFAULT_HIDDEN_ITEMS);

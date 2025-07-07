@@ -58,7 +58,7 @@ public class TabUtils {
 
     public static Tab getTabOfGuiScreen(GuiScreen screen) {
         if (screen instanceof GuiRecipeViewer viewer) {
-            if (GuiRecipeViewer.tabs.get(viewer.tabIndex) instanceof TabLootHints tab) {
+            if (GuiRecipeViewer.tabs.get(viewer.tabIndex) instanceof Tab tab) {
                 return tab;
             }
         }

@@ -166,7 +166,6 @@ public class HMIClient {
     }
 
     public static void pushRecipe(GuiScreen gui, ItemStack item, boolean getUses) {
-        new Throwable().printStackTrace();
         Minecraft mc = Minecraft.theMinecraft;
         if (mc.thePlayer.inventory.getCursorStack() == null) {
             if (gui instanceof GuiRecipeViewer) {

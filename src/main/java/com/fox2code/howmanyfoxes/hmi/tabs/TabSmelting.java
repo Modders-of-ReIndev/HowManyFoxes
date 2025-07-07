@@ -1,5 +1,6 @@
 package com.fox2code.howmanyfoxes.hmi.tabs;
 
+import com.fox2code.foxloader.event.client.GuiItemInfoEvent;
 import net.minecraft.common.block.Block;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.block.data.Materials;
@@ -7,6 +8,7 @@ import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.item.Items;
 import net.minecraft.common.recipe.FurnaceRecipes;
+import net.minecraft.common.util.i18n.StringTranslate;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -189,6 +191,14 @@ public class TabSmelting extends TabWithTexture {
    @Override
    public @NotNull ItemStack getTabItem() {
       return new ItemStack(this.tabBlock, 1, this.metadata);
+   }
+
+   @Override
+   public void onAdditionalTooltipInfo(GuiItemInfoEvent event) {
+      int burnTime = this.getItemBurnTime(event.getItemStack());
+      if (burnTime > 0) {
+         event.addDescriptionLine(StringTranslate.getInstance().translateKeyFormat("hmf.smelting.burntime", burnTime));
+      }
    }
 
    public ArrayList<ItemStack> getFuels() {
