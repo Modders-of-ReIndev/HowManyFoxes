@@ -337,7 +337,7 @@ public class GuiOverlay extends GuiScreen {
             if (!shiftHeld || HMIClient.getTabs().isEmpty()) {
                s = "Settings";
             } else if (this.guiBlock != null) {
-               s = "View " + Utils.getNiceItemName(this.guiBlock, false) + " Recipes";
+               s = "View " + Utils.getNiceItemName(this.guiBlock) + " Recipes";
             } else {
                s = "View All Recipes";
             }

@@ -24,13 +24,6 @@ public class HMIFoxedConfig implements GuiConfigProviderConfigObject {
     @ConfigEntry
     public boolean cheatsEnabled = false;
 
-    /**
-     * @deprecated ReIndev & HMF have a better approach with CTRL
-     */
-    @Deprecated
-    @ConfigEntry
-    public boolean showItemIDs = false;
-
     @ConfigEntry
     public boolean showItemMod = false;
 

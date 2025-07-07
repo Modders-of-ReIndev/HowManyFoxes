@@ -3,7 +3,6 @@ package com.fox2code.howmanyfoxes.hmi;
 import com.fox2code.foxloader.registry.missing.MissingItem;
 import com.fox2code.foxloader.registry.missing.MissingItemBlock;
 import com.fox2code.howmanyfoxes.HMIClient;
-import com.fox2code.howmanyfoxes.HowManyFoxes;
 import com.fox2code.howmanyfoxes.hmi.config.DefaultHiddenItems;
 import com.fox2code.howmanyfoxes.hmi.tabs.Tab;
 import com.indigo3d.util.RenderSystem;
@@ -22,6 +21,7 @@ import net.minecraft.common.recipe.CraftingManager;
 import net.minecraft.common.recipe.IRecipe;
 import net.minecraft.common.recipe.RecipesArmorDyes;
 import net.minecraft.common.util.i18n.StringTranslate;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -43,27 +43,14 @@ public class Utils {
    private static float tooltipX;
    private static float tooltipY;
 
-   public static String getNiceItemName(ItemStack item, boolean withID) {
-      String s = StringTranslate.getInstance().translateNamedKey(item.getItemName());
-      if (s == null || s.isEmpty()) {
-         s = item.getItemName();
-         if (s == null) {
-            s = "null";
-         }
+   public static @NotNull String getNiceItemName(@NotNull ItemStack item) {
+      final String ready = StringTranslate.getInstance().translateNamedKey(item.getItemName());
+      if (ready == null || ready.isEmpty()) {
+         final String raw = item.getItemName();
+         if (raw == null) return "null";
+         return raw;
       }
-
-      if (HowManyFoxes.CONFIG.showItemIDs && withID) {
-         s = s + " " + item.getItemID();
-         if (item.getHasSubtypes()) {
-            s = s + ":" + item.getItemDamage();
-         }
-      }
-
-      return s;
-   }
-
-   public static String getNiceItemName(ItemStack item) {
-      return getNiceItemName(item, true);
+      return ready;
    }
 
    public static ItemStack hoveredItem(GuiContainer gui, float posX, float posY) {

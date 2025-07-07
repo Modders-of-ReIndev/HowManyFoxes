@@ -37,7 +37,7 @@ public class GuiOptionsHMI extends GuiScreen {
       this.controlList
          .add(
             this.buttonShowItemMod = new GuiSmallButton(
-               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Show Items Mod: " + (HowManyFoxes.CONFIG.showItemIDs ? "ON" : "OFF")
+               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Show Items Mod: " + (HowManyFoxes.CONFIG.showItemMod ? "ON" : "OFF")
             )
          );
       this.controlList
