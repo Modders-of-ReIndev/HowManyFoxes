@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-public class GuiRecipeViewer extends GuiContainer {
+public class GuiRecipeViewer extends GuiContainer<ContainerRecipeViewer> {
    public static final int RECIPE_VIEWER_DEFAULT_WIDTH = 251;
    public static final int RECIPE_VIEWER_DEFAULT_HEIGHT = 134;
 
