@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-public class GuiRecipeViewer extends GuiContainer {
+public class GuiRecipeViewer extends GuiContainer<ContainerRecipeViewer> {
    private boolean dragging;
    private float cursorPosX;
    private float cursorPosY;

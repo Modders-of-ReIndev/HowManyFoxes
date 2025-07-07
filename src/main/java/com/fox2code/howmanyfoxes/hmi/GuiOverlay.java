@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class GuiOverlay extends GuiScreen {
-   private final int BUTTON_HEIGHT = 20;
-   public static GuiContainer screen;
+   private static final int BUTTON_HEIGHT = 20;
+   public static GuiContainer<?> screen;
    private static ArrayList<ItemStack> currentItems;
    public static ItemStack hoverItem;
    private static GuiTextFieldHMI searchBox;
@@ -49,7 +49,7 @@ public class GuiOverlay extends GuiScreen {
    public boolean modTickKeyPress;
    protected ScaledResolution scaledresolution = new ScaledResolution();
 
-   public GuiOverlay(GuiContainer gui) {
+   public GuiOverlay(GuiContainer<?> gui) {
       this.xSize = 0;
       this.ySize = 0;
       this.draggingFrom = null;
