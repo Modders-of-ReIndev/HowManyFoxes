@@ -143,7 +143,7 @@ public class GuiOverlay extends GuiScreen {
       if (shiftHeld && !HMIClient.getTabs().isEmpty()) {
          this.buttonOptions.iconIndex = 2;
          if (this.buttonTrash != null) {
-            this.buttonTrash.displayString = "Delete ALL";
+            this.buttonTrash.displayString = "Clear Inv.";
          }
       } else {
          this.buttonOptions.iconIndex = HowManyFoxes.CONFIG.cheatsEnabled ? 1 : 0;
@@ -352,7 +352,7 @@ public class GuiOverlay extends GuiScreen {
          } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonTrash.mousePressed(this.mc, mouseX, mouseY)) {
             if (inventoryplayer.getCursorStack() == null) {
                if (shiftHeld) {
-                  s = "Delete ALL Items";
+                  s = "Clear WHOLE inventory";
                } else {
                   s = "Drag item here to delete";
                }
@@ -554,10 +554,7 @@ public class GuiOverlay extends GuiScreen {
          } else if (!this.mc.theWorld.isRemote && guibutton == this.buttonTrash) {
             if (this.mc.thePlayer.inventory.getCursorStack() == null) {
                if (shiftHeld && !(screen instanceof GuiRecipeViewer) && System.currentTimeMillis() > deleteAllWaitUntil) {
-                  for(int i = 0; i < screen.inventorySlots.slots.size(); ++i) {
-                     Slot slot = screen.inventorySlots.slots.get(i);
-                     slot.putStack(null);
-                  }
+                  this.mc.sendAbritraryCommand("/clear");
                }
             } else {
                if (shiftHeld) {

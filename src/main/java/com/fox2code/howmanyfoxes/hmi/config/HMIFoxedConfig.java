@@ -83,7 +83,7 @@ public class HMIFoxedConfig implements GuiConfigProviderConfigObject {
         return new GuiOptionsHMI(parent);
     }
 
-    public static String packHiddenItems(ArrayList<ItemStack> hiddenItems) {
+    public static @NotNull String packHiddenItems(@Nullable ArrayList<ItemStack> hiddenItems) {
         if (hiddenItems == null || hiddenItems.isEmpty()) {
             return "";
         }
@@ -177,7 +177,7 @@ public class HMIFoxedConfig implements GuiConfigProviderConfigObject {
         return builder.toString();
     }
 
-    public static void unpackTabIndexes(String input) {
+    public static void unpackTabIndexes(@Nullable String input) {
         if(input == null || input.isEmpty() || HMIClient.allTabs == null) {
             return;
         }
