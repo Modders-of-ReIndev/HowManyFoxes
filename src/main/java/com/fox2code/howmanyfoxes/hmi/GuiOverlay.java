@@ -1,6 +1,7 @@
 package com.fox2code.howmanyfoxes.hmi;
 
 import com.fox2code.howmanyfoxes.HMIClient;
+import com.fox2code.howmanyfoxes.HowManyFoxes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.common.block.container.Slot;
@@ -93,7 +94,7 @@ public class GuiOverlay extends GuiScreen {
 
       int searchBoxX = k + this.xSize + 1;
       int searchBoxWidth = screen.width - k - this.xSize - 20 - 2;
-      if (Config.centredSearchBar) {
+      if (HowManyFoxes.CONFIG.centredSearchBar) {
          searchBoxX -= this.xSize;
          searchBoxWidth = this.xSize - 20 - 3;
       }
@@ -103,28 +104,28 @@ public class GuiOverlay extends GuiScreen {
               .setMaxStringLength((searchBoxWidth - 10) / 6);
       this.controlList.add(this.buttonOptions = new GuiButtonHMI(
               id++, searchBoxX + searchBoxWidth + 1, screen.height - 20 - 1, 20,
-              Config.cheatsEnabled ? 1 : 0, this.guiBlock));
+              HowManyFoxes.CONFIG.cheatsEnabled ? 1 : 0, this.guiBlock));
       this.controlList.add(this.buttonNextPage = new GuiButtonHMI(
               id++, screen.width - (screen.width - k - this.xSize) / 3, 0,
               (screen.width - k - this.xSize) / 3, 20, "Next"));
       this.controlList.add(this.buttonPrevPage = new GuiButtonHMI(
               id++, k + this.xSize, 0,
               (screen.width - k - this.xSize) / 3, 20, "Prev"));
-      if (Config.cheatsEnabled) {
+      if (HowManyFoxes.CONFIG.cheatsEnabled) {
          boolean mp = this.mc.theWorld.isRemote;
-         if (!mp || !Config.mpTimeDayCommand.isEmpty()) {
+         if (!mp || !HowManyFoxes.CONFIG.mpTimeDayCommand.isEmpty()) {
             this.controlList.add(this.buttonTimeDay = new GuiButtonHMI(id++, 0, 0, 20, 12));
          }
 
-         if (!mp || !Config.mpTimeNightCommand.isEmpty()) {
+         if (!mp || !HowManyFoxes.CONFIG.mpTimeNightCommand.isEmpty()) {
             this.controlList.add(this.buttonTimeNight = new GuiButtonHMI(id++, 20, 0, 20, 13));
          }
 
-         if (!mp || !Config.mpRainOFFCommand.isEmpty() || !Config.mpRainONCommand.isEmpty()) {
+         if (!mp || !HowManyFoxes.CONFIG.mpRainOFFCommand.isEmpty() || !HowManyFoxes.CONFIG.mpRainONCommand.isEmpty()) {
             this.controlList.add(this.buttonToggleRain = new GuiButtonHMI(id++, 40, 0, 20, 14));
          }
 
-         if (!mp || !Config.mpHealCommand.isEmpty()) {
+         if (!mp || !HowManyFoxes.CONFIG.mpHealCommand.isEmpty()) {
             this.controlList.add(this.buttonHeal = new GuiButtonHMI(id++, 60, 0, 20, 15));
          }
 
@@ -143,7 +144,7 @@ public class GuiOverlay extends GuiScreen {
             this.buttonTrash.displayString = "Delete ALL";
          }
       } else {
-         this.buttonOptions.iconIndex = Config.cheatsEnabled ? 1 : 0;
+         this.buttonOptions.iconIndex = HowManyFoxes.CONFIG.cheatsEnabled ? 1 : 0;
          if (this.buttonTrash != null) {
             this.buttonTrash.displayString = "Trash";
          }
@@ -163,7 +164,7 @@ public class GuiOverlay extends GuiScreen {
       boolean itemHovered = false;
       InventoryPlayer inventoryplayer = this.mc.thePlayer.inventory;
       int canvasHeight = screen.height - 40;
-      if (Config.centredSearchBar) {
+      if (HowManyFoxes.CONFIG.centredSearchBar) {
          canvasHeight += 20;
       }
 
@@ -320,7 +321,7 @@ public class GuiOverlay extends GuiScreen {
          } else {
             s = "Hide " + Utils.getNiceItemName(hoverItem);
          }
-      } else if (!Config.cheatsEnabled
+      } else if (!HowManyFoxes.CONFIG.cheatsEnabled
          || inventoryplayer.getCursorStack() == null
          || hoverItem == null
             && (
@@ -338,15 +339,15 @@ public class GuiOverlay extends GuiScreen {
             } else {
                s = "View All Recipes";
             }
-         } else if (Config.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonTimeDay.mousePressed(this.mc, mouseX, mouseY)) {
+         } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonTimeDay.mousePressed(this.mc, mouseX, mouseY)) {
             s = "Set time to day";
-         } else if (Config.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonTimeNight.mousePressed(this.mc, mouseX, mouseY)) {
+         } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonTimeNight.mousePressed(this.mc, mouseX, mouseY)) {
             s = "Set time to night";
-         } else if (Config.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonToggleRain.mousePressed(this.mc, mouseX, mouseY)) {
+         } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonToggleRain.mousePressed(this.mc, mouseX, mouseY)) {
             s = "Toggle rain";
-         } else if (Config.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonHeal.mousePressed(this.mc, mouseX, mouseY)) {
+         } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonHeal.mousePressed(this.mc, mouseX, mouseY)) {
             s = "Heal";
-         } else if (Config.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonTrash.mousePressed(this.mc, mouseX, mouseY)) {
+         } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonTrash.mousePressed(this.mc, mouseX, mouseY)) {
             if (inventoryplayer.getCursorStack() == null) {
                if (shiftHeld) {
                   s = "Delete ALL Items";
@@ -413,14 +414,14 @@ public class GuiOverlay extends GuiScreen {
          int k = (screen.width - this.xSize) / 2 + this.xSize + 1;
          int w = screen.width - (screen.width - this.xSize) / 2 - this.xSize - 1;
          int canvasHeight = screen.height - 40;
-         if (Config.centredSearchBar) {
+         if (HowManyFoxes.CONFIG.centredSearchBar) {
             canvasHeight += 20;
          }
 
          searchBox.mouseClicked(posX, posY, eventButton);
          if (!showHiddenItems) {
             if (hoverItem != null && this.mc.thePlayer.inventory.getCursorStack() == null) {
-               if (this.mc.thePlayer.inventory.getCursorStack() == null && Config.cheatsEnabled) {
+               if (this.mc.thePlayer.inventory.getCursorStack() == null && HowManyFoxes.CONFIG.cheatsEnabled) {
                   if (eventButton == 0 || eventButton == 1) {
                      if (!this.mc.theWorld.isRemote) {
                         ItemStack spawnedItem = hoverItem.copy();
@@ -431,10 +432,10 @@ public class GuiOverlay extends GuiScreen {
                         }
 
                         this.mc.thePlayer.inventory.addItemStackToInventory(spawnedItem);
-                     } else if (!Config.mpGiveCommand.isEmpty()) {
+                     } else if (!HowManyFoxes.CONFIG.mpGiveCommand.isEmpty()) {
                         NumberFormat numberformat = NumberFormat.getIntegerInstance();
                         numberformat.setGroupingUsed(false);
-                        MessageFormat messageformat = new MessageFormat(Config.mpGiveCommand);
+                        MessageFormat messageformat = new MessageFormat(HowManyFoxes.CONFIG.mpGiveCommand);
                         messageformat.setFormatByArgumentIndex(1, numberformat);
                         messageformat.setFormatByArgumentIndex(2, numberformat);
                         messageformat.setFormatByArgumentIndex(3, numberformat);
@@ -480,7 +481,7 @@ public class GuiOverlay extends GuiScreen {
                      && posY > 20 + canvasHeight % 18 / 2
                      && posY < 20 + canvasHeight
             )
-            && Config.cheatsEnabled) {
+            && HowManyFoxes.CONFIG.cheatsEnabled) {
             if (eventButton == 0) {
                this.mc.thePlayer.inventory.setCursorStack(null);
             } else if (eventButton == 1) {
@@ -490,7 +491,7 @@ public class GuiOverlay extends GuiScreen {
                   .setCursorStack(this.mc.thePlayer.inventory.getCursorStack().splitStack(
                           this.mc.thePlayer.inventory.getCursorStack().stackSize - 1));
             }
-         } else if (Config.cheatsEnabled
+         } else if (HowManyFoxes.CONFIG.cheatsEnabled
             && !this.mc.theWorld.isRemote
             && this.buttonTrash.mousePressed(this.mc, posX, posY)
             && this.mc.thePlayer.inventory.getCursorStack() != null
@@ -588,15 +589,15 @@ public class GuiOverlay extends GuiScreen {
             var6.printStackTrace();
          }
       } else if (guibutton == this.buttonTimeDay) {
-         this.mc.thePlayer.sendChatMessage(Config.mpTimeDayCommand);
+         this.mc.thePlayer.sendChatMessage(HowManyFoxes.CONFIG.mpTimeDayCommand);
       } else if (guibutton == this.buttonTimeNight) {
-         this.mc.thePlayer.sendChatMessage(Config.mpTimeNightCommand);
+         this.mc.thePlayer.sendChatMessage(HowManyFoxes.CONFIG.mpTimeNightCommand);
       } else if (guibutton == this.buttonToggleRain) {
          try {
             if (this.mc.theWorld.worldInfo.getRaining()) {
-               this.mc.thePlayer.sendChatMessage(Config.mpRainOFFCommand);
+               this.mc.thePlayer.sendChatMessage(HowManyFoxes.CONFIG.mpRainOFFCommand);
             } else {
-               this.mc.thePlayer.sendChatMessage(Config.mpRainONCommand);
+               this.mc.thePlayer.sendChatMessage(HowManyFoxes.CONFIG.mpRainONCommand);
             }
          } catch (IllegalArgumentException var5) {
             var5.printStackTrace();
@@ -607,7 +608,7 @@ public class GuiOverlay extends GuiScreen {
    @Override
    public void keyTyped(char c, int i) {
       if (!searchBoxFocused()
-         && Config.fastSearch
+         && HowManyFoxes.CONFIG.fastSearch
          && !HMIClient.keyHeldLastTick
          && i != this.mc.gameSettings.keyBindInventory.keyCode
          && i != Config.allRecipes.keyCode
@@ -735,7 +736,7 @@ public class GuiOverlay extends GuiScreen {
       int k = (screen.width - this.xSize) / 2 + this.xSize + 1;
       if (posX > k) {
          int i = Mouse.getEventDWheel();
-         if (!Config.scrollInverted) {
+         if (!HowManyFoxes.CONFIG.scrollInverted) {
             if (i > 0) {
                this.incIndex();
             }
@@ -816,8 +817,8 @@ public class GuiOverlay extends GuiScreen {
    public void toggle() {
       if (this.buttonNextPage != null) {
          for(GuiButton obj : this.buttons()) {
-            if (Config.overlayEnabled) {
-               if (Config.cheatsEnabled || obj == this.buttonNextPage || obj == this.buttonPrevPage || obj == this.buttonOptions) {
+            if (HowManyFoxes.CONFIG.overlayEnabled) {
+               if (HowManyFoxes.CONFIG.cheatsEnabled || obj == this.buttonNextPage || obj == this.buttonPrevPage || obj == this.buttonOptions) {
                   obj.visible = true;
                }
             } else {
@@ -825,15 +826,15 @@ public class GuiOverlay extends GuiScreen {
             }
          }
 
-         searchBox.isEnabled = Config.overlayEnabled;
+         searchBox.isEnabled = HowManyFoxes.CONFIG.overlayEnabled;
       }
 
-      if (!Config.overlayEnabled) {
+      if (!HowManyFoxes.CONFIG.overlayEnabled) {
          Minecraft.theMinecraft.currentScreen = screen;
          hoverItem = null;
       }
 
-      Config.writeConfig();
+      HowManyFoxes.forceSaveConfig();
    }
 
    public static void focusSearchBox() {

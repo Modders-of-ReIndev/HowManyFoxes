@@ -3,6 +3,7 @@ package com.fox2code.howmanyfoxes.hmi;
 import com.fox2code.foxloader.registry.missing.MissingItem;
 import com.fox2code.foxloader.registry.missing.MissingItemBlock;
 import com.fox2code.howmanyfoxes.HMIClient;
+import com.fox2code.howmanyfoxes.HowManyFoxes;
 import com.fox2code.howmanyfoxes.hmi.tabs.Tab;
 import com.indigo3d.util.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -54,7 +55,7 @@ public class Utils {
          }
       }
 
-      if (Config.showItemIDs && withID) {
+      if (HowManyFoxes.CONFIG.showItemIDs && withID) {
          s = s + " " + item.getItemID();
          if (item.getHasSubtypes()) {
             s = s + ":" + item.getItemDamage();

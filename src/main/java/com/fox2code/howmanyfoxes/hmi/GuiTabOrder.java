@@ -1,5 +1,6 @@
 package com.fox2code.howmanyfoxes.hmi;
 
+import com.fox2code.howmanyfoxes.HowManyFoxes;
 import com.fox2code.howmanyfoxes.hmi.tabs.Tab;
 import com.fox2code.howmanyfoxes.HMIClient;
 import com.indigo3d.util.RenderSystem;
@@ -56,7 +57,7 @@ public class GuiTabOrder extends GuiScreen {
          }
 
          this.controlList.add(new GuiButtonHMI(this.controlList.size(), -1, -1, BUTTON_HEIGHT, 4));
-         String s = this.currentTabs.get(i).TAB_CREATOR.getClass().getSimpleName().replaceFirst("mod_", "");
+         String s = this.currentTabs.get(i).TAB_CREATOR.replaceFirst("mod_", "");
          s = s + " - " + this.currentTabs.get(i).name() + ": Enabled";
          this.controlList.add(new GuiSmallButton(this.controlList.size(), -1, -1, 268, BUTTON_HEIGHT, s));
       }
@@ -69,7 +70,7 @@ public class GuiTabOrder extends GuiScreen {
             ((GuiButton)this.controlList.get(this.controlList.size() - 1)).enabled = false;
             this.controlList.add(new GuiButtonHMI(this.controlList.size(), -1, -1, BUTTON_HEIGHT, 4));
             ((GuiButton)this.controlList.get(this.controlList.size() - 1)).enabled = false;
-            String s = allTab.TAB_CREATOR.getClass().getSimpleName().replaceFirst("mod_", "");
+            String s = allTab.TAB_CREATOR.replaceFirst("mod_", "");
             s = s + " - " + allTab.name() + ": Disabled";
             this.controlList.add(new GuiSmallButton(this.controlList.size(), -1, -1, 268, BUTTON_HEIGHT, s));
          }
@@ -83,7 +84,7 @@ public class GuiTabOrder extends GuiScreen {
       this.controlList
          .add(
             new GuiSmallButton(
-               this.controlList.size(), this.width / 2 - 154, this.height - 39, "Gui Size: " + (Config.recipeViewerDraggableGui ? "Draggable" : "Auto")
+               this.controlList.size(), this.width / 2 - 154, this.height - 39, "Gui Size: " + (HowManyFoxes.CONFIG.recipeViewerDraggableGui ? "Draggable" : "Auto")
             )
          );
       this.controlList.add(new GuiSmallButton(this.controlList.size(), this.width / 2 + 4, this.height - 39, stringtranslate.translateKey("gui.done")));
@@ -99,8 +100,8 @@ public class GuiTabOrder extends GuiScreen {
       if (guibutton.id == this.controlList.size() - 1) {
          this.mc.displayGuiScreen(this.parentScreen);
       } else if (guibutton.id == this.controlList.size() - 2) {
-         Config.recipeViewerDraggableGui = !Config.recipeViewerDraggableGui;
-         guibutton.displayString = "Gui Size: " + (Config.recipeViewerDraggableGui ? "Draggable" : "Auto");
+         HowManyFoxes.CONFIG.recipeViewerDraggableGui = !HowManyFoxes.CONFIG.recipeViewerDraggableGui;
+         guibutton.displayString = "Gui Size: " + (HowManyFoxes.CONFIG.recipeViewerDraggableGui ? "Draggable" : "Auto");
          HMIClient.onSettingChanged();
       } else {
          if (guibutton.id % 3 == 2) {

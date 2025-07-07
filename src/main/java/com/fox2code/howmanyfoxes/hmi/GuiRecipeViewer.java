@@ -58,9 +58,9 @@ public class GuiRecipeViewer extends GuiContainer {
    }
 
    private void init() {
-      if (Config.recipeViewerDraggableGui) {
-         this.xSize = Config.recipeViewerGuiWidth;
-         this.ySize = Config.recipeViewerGuiHeight;
+      if (HowManyFoxes.CONFIG.recipeViewerDraggableGui) {
+         this.xSize = HowManyFoxes.CONFIG.recipeViewerGuiWidth;
+         this.ySize = HowManyFoxes.CONFIG.recipeViewerGuiHeight;
       } else {
          this.xSize = Config.recipeViewerGuiWidthDefault;
          if (this.parent instanceof GuiContainer) {
@@ -203,7 +203,7 @@ public class GuiRecipeViewer extends GuiContainer {
    @Override
    public void handleMouseInput() {
       int i = Mouse.getEventDWheel();
-      if (!Config.scrollInverted) {
+      if (!HowManyFoxes.CONFIG.scrollInverted) {
          if (i > 0) {
             inv.incIndex();
             this.initButtons();
@@ -265,7 +265,7 @@ public class GuiRecipeViewer extends GuiContainer {
       ItemStack item = Utils.hoveredItem(this, posX, posY);
       if (item != null && this.mc.thePlayer.inventory.getCursorStack() == null) {
          this.push(item, k == 1);
-      } else if (Config.recipeViewerDraggableGui
+      } else if (HowManyFoxes.CONFIG.recipeViewerDraggableGui
          && posX - this.xSize + 10 > x
          && posX - this.xSize - 4 < x
          && posY - this.ySize + 10 > y
@@ -311,12 +311,12 @@ public class GuiRecipeViewer extends GuiContainer {
 
    public void newTab(Tab tab) {
       this.tabIndex = tabs.indexOf(tab);
-      if (Config.recipeViewerDraggableGui) {
+      if (HowManyFoxes.CONFIG.recipeViewerDraggableGui) {
          if (this.xSize < tab.WIDTH + 8) {
-            this.xSize = Config.recipeViewerGuiWidth = tab.WIDTH + 8;
+            this.xSize = HowManyFoxes.CONFIG.recipeViewerGuiWidth = tab.WIDTH + 8;
          }
          if (this.ySize < tab.HEIGHT + 8) {
-            this.ySize = Config.recipeViewerGuiHeight = tab.HEIGHT + 8;
+            this.ySize = HowManyFoxes.CONFIG.recipeViewerGuiHeight = tab.HEIGHT + 8;
          }
       }
       tab.redrawSlots = true;
@@ -667,7 +667,7 @@ public class GuiRecipeViewer extends GuiContainer {
 
       Utils.bindTexture();
       Utils.disableLighting();
-      if (Config.recipeViewerDraggableGui && !this.dragging) {
+      if (HowManyFoxes.CONFIG.recipeViewerDraggableGui && !this.dragging) {
          this.drawTexturedModalRect(x + this.xSize - 29, y + this.ySize - 29, 56, 169, 28, 28);
       }
 
@@ -757,10 +757,10 @@ public class GuiRecipeViewer extends GuiContainer {
    }
 
    public void onGuiClosed() {
-      if (Config.recipeViewerGuiWidth != this.xSize || Config.recipeViewerGuiHeight != this.ySize) {
-         Config.recipeViewerGuiWidth = this.xSize;
-         Config.recipeViewerGuiHeight = this.ySize;
-         Config.writeConfig();
+      if (HowManyFoxes.CONFIG.recipeViewerGuiWidth != this.xSize || HowManyFoxes.CONFIG.recipeViewerGuiHeight != this.ySize) {
+         HowManyFoxes.CONFIG.recipeViewerGuiWidth = this.xSize;
+         HowManyFoxes.CONFIG.recipeViewerGuiHeight = this.ySize;
+         HowManyFoxes.forceSaveConfig();
       }
    }
 }

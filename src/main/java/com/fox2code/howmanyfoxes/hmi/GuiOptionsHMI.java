@@ -1,6 +1,7 @@
 package com.fox2code.howmanyfoxes.hmi;
 
 import com.fox2code.howmanyfoxes.HMIClient;
+import com.fox2code.howmanyfoxes.HowManyFoxes;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSmallButton;
@@ -30,25 +31,25 @@ public class GuiOptionsHMI extends GuiScreen {
       this.controlList
          .add(
             this.buttonCheats = new GuiSmallButton(
-               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Mode: " + (Config.cheatsEnabled ? "Cheat Mode" : "Recipe Mode")
+               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Mode: " + (HowManyFoxes.CONFIG.cheatsEnabled ? "Cheat Mode" : "Recipe Mode")
             )
          );
       this.controlList
          .add(
             this.buttonShowItemMod = new GuiSmallButton(
-               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Show Items Mod: " + (Config.showItemIDs ? "ON" : "OFF")
+               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Show Items Mod: " + (HowManyFoxes.CONFIG.showItemIDs ? "ON" : "OFF")
             )
          );
       this.controlList
          .add(
             this.buttonCentredSearchBar = new GuiSmallButton(
-               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Centred Search Bar: " + (Config.centredSearchBar ? "ON" : "OFF")
+               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Centred Search Bar: " + (HowManyFoxes.CONFIG.centredSearchBar ? "ON" : "OFF")
             )
          );
       this.controlList
          .add(
             this.buttonFastSearch = new GuiSmallButton(
-               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Fast Search: " + (Config.fastSearch ? "ON" : "OFF")
+               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Fast Search: " + (HowManyFoxes.CONFIG.fastSearch ? "ON" : "OFF")
             )
          );
       this.controlList
@@ -60,7 +61,7 @@ public class GuiOptionsHMI extends GuiScreen {
       this.controlList
          .add(
             this.buttonInvertedScroll = new GuiSmallButton(
-               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Flip Scroll Direction: " + (Config.scrollInverted ? "ON" : "OFF")
+               ++i, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), "Flip Scroll Direction: " + (HowManyFoxes.CONFIG.scrollInverted ? "ON" : "OFF")
             )
          );
       this.controlList.add(this.buttonKeybinds = new GuiButton(++i, this.width / 2 - 100, this.height / 6 + 96 + 12, "Keybinds..."));
@@ -71,24 +72,24 @@ public class GuiOptionsHMI extends GuiScreen {
    @Override
    protected void actionPerformed(GuiButton guibutton) {
       if (guibutton == this.buttonCheats) {
-         Config.cheatsEnabled = !Config.cheatsEnabled;
-         this.buttonCheats.displayString = "Mode: " + (Config.cheatsEnabled ? "Cheat Mode" : "Recipe Mode");
+         HowManyFoxes.CONFIG.cheatsEnabled = !HowManyFoxes.CONFIG.cheatsEnabled;
+         this.buttonCheats.displayString = "Mode: " + (HowManyFoxes.CONFIG.cheatsEnabled ? "Cheat Mode" : "Recipe Mode");
       } else if (guibutton == this.buttonShowItemMod) {
-         Config.showItemMod = !Config.showItemMod;
-         this.buttonShowItemMod.displayString = "Show Items Mod: " + (Config.showItemMod ? "ON" : "OFF");
+         HowManyFoxes.CONFIG.showItemMod = !HowManyFoxes.CONFIG.showItemMod;
+         this.buttonShowItemMod.displayString = "Show Items Mod: " + (HowManyFoxes.CONFIG.showItemMod ? "ON" : "OFF");
       } else if (guibutton == this.buttonCentredSearchBar) {
-         Config.centredSearchBar = !Config.centredSearchBar;
-         this.buttonCentredSearchBar.displayString = "Centred Search Bar: " + (Config.centredSearchBar ? "ON" : "OFF");
+         HowManyFoxes.CONFIG.centredSearchBar = !HowManyFoxes.CONFIG.centredSearchBar;
+         this.buttonCentredSearchBar.displayString = "Centred Search Bar: " + (HowManyFoxes.CONFIG.centredSearchBar ? "ON" : "OFF");
       } else if (guibutton == this.buttonFastSearch) {
-         Config.fastSearch = !Config.fastSearch;
-         this.buttonFastSearch.displayString = "Fast Search: " + (Config.fastSearch ? "ON" : "OFF");
+         HowManyFoxes.CONFIG.fastSearch = !HowManyFoxes.CONFIG.fastSearch;
+         this.buttonFastSearch.displayString = "Fast Search: " + (HowManyFoxes.CONFIG.fastSearch ? "ON" : "OFF");
       } else if (guibutton == this.buttonHiding) {
          GuiOverlay.showHiddenItems = !GuiOverlay.showHiddenItems;
          GuiOverlay.resetItems(true);
          this.buttonHiding.displayString = "Hide Items Mode: " + (GuiOverlay.showHiddenItems ? "ON" : "OFF");
       } else if (guibutton == this.buttonInvertedScroll) {
-         Config.scrollInverted = !Config.scrollInverted;
-         this.buttonInvertedScroll.displayString = "Flip Scroll Direction: " + (Config.scrollInverted ? "ON" : "OFF");
+         HowManyFoxes.CONFIG.scrollInverted = !HowManyFoxes.CONFIG.scrollInverted;
+         this.buttonInvertedScroll.displayString = "Flip Scroll Direction: " + (HowManyFoxes.CONFIG.scrollInverted ? "ON" : "OFF");
       } else {
          if (guibutton == this.buttonDone) {
             GuiOverlay.guiClosedCooldown = System.currentTimeMillis() + 100L;

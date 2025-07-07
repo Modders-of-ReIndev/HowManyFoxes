@@ -1,21 +1,28 @@
 package com.fox2code.howmanyfoxes;
 
 import com.fox2code.foxevents.EventHandler;
+import com.fox2code.foxloader.client.KeyBindingAPI;
 import com.fox2code.foxloader.client.gui.GuiConfigProvider;
+import com.fox2code.foxloader.config.ConfigIO;
 import com.fox2code.foxloader.event.FoxLoaderEvents;
 import com.fox2code.foxloader.event.client.GuiItemInfoEvent;
 import com.fox2code.foxloader.launcher.FoxLauncher;
 import com.fox2code.foxloader.loader.Mod;
+import com.fox2code.foxloader.loader.ModContainer;
 import com.fox2code.howmanyfoxes.hmi.Config;
 import com.fox2code.howmanyfoxes.hmi.GuiOptionsHMI;
+import com.fox2code.howmanyfoxes.hmi.GuiOverlay;
 import com.fox2code.howmanyfoxes.hmi.Utils;
 import com.fox2code.howmanyfoxes.hmi.tabs.TabLootHints;
+import net.minecraft.client.util.KeyBinding;
 import net.minecraft.common.util.ChatColors;
 import net.minecraft.common.util.i18n.StringTranslate;
 
 import java.util.logging.Logger;
 
 public class HowManyFoxes extends Mod {
+    public static HMIFoxedConfig CONFIG = new HMIFoxedConfig();
+    private static ModContainer CONTAINER;
     public static Logger logger;
 
     public HowManyFoxes() {
@@ -24,10 +31,24 @@ public class HowManyFoxes extends Mod {
 
     @Override
     public void onPreInit() {
+        CONTAINER = this.getModContainer();
         if (FoxLauncher.isClient()) {
-            this.setConfigObject((GuiConfigProvider) GuiOptionsHMI::new);
-            Config.init();
+            this.setConfigObject(CONFIG);
+            //read additional stuff
+            GuiOverlay.hiddenItems = HMIFoxedConfig.unpackHiddenItems(CONFIG.hiddenItems);
+            HMIFoxedConfig.unpackTabIndexes(CONFIG.tableIndexes);
+
+            //register keybinds here
+            for (KeyBinding keyBinding : Config.keyBinds) {
+                KeyBindingAPI.registerKeyBinding(keyBinding);
+            }
         }
+    }
+
+    public static void forceSaveConfig() {
+        CONFIG.hiddenItems = HMIFoxedConfig.packHiddenItems(GuiOverlay.hiddenItems);
+        CONFIG.tableIndexes = HMIFoxedConfig.packTabIndexes();
+        ConfigIO.writeConfiguration(CONTAINER, CONFIG);
     }
 
     @Override
@@ -41,7 +62,7 @@ public class HowManyFoxes extends Mod {
 
     @EventHandler(priority = -1000)
     public void onGetItemInfo(GuiItemInfoEvent event) {
-        if (Config.showItemMod) {
+        if (HowManyFoxes.CONFIG.showItemMod) {
             event.addDescriptionLine(ChatColors.BLUE +
                     event.getItemStack().getItem().getRegisteringMod().getModName());
         }

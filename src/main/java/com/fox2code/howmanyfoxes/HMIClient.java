@@ -51,14 +51,14 @@ public class HMIClient {
             INSTANCE.overlay.initGui();
         }
 
-        Config.writeConfig();
+        HowManyFoxes.forceSaveConfig();
     }
 
     public void tickGui(Minecraft mc, GuiScreen guiscreen) {
         final boolean isGuiContainer = guiscreen instanceof GuiContainer;
         if (isGuiContainer || guiscreen instanceof GuiOverlay) {
             GuiContainer screen = isGuiContainer ? (GuiContainer)guiscreen : null;
-            if (Config.overlayEnabled && isGuiContainer) {
+            if (HowManyFoxes.CONFIG.overlayEnabled && isGuiContainer) {
                 if (GuiOverlay.screen != screen
                         || this.overlay == null
                         || screen.width != this.overlay.width
@@ -78,10 +78,10 @@ public class HMIClient {
                         if ((guiscreen instanceof GuiRecipeViewer ||
                                 guiscreen instanceof GuiOverlay) && !GuiOverlay.searchBoxFocused()) {
                             ((GuiRecipeViewer)guiscreen).pop();
-                        } else if (Config.overlayEnabled
+                        } else if (HowManyFoxes.CONFIG.overlayEnabled
                                 && guiscreen == GuiOverlay.screen
                                 && !GuiOverlay.searchBoxFocused()
-                                && Config.fastSearch
+                                && HowManyFoxes.CONFIG.fastSearch
                                 && !GuiOverlay.emptySearchBox()) {
                             GuiOverlay.focusSearchBox();
                         }
@@ -126,7 +126,7 @@ public class HMIClient {
 
                 if (newFilter != null) {
                     pushRecipe(guiscreen, newFilter, getUses);
-                } else if (Config.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && Config.fastSearch) {
+                } else if (HowManyFoxes.CONFIG.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && HowManyFoxes.CONFIG.fastSearch) {
                     GuiOverlay.focusSearchBox();
                 }
             }
@@ -148,8 +148,8 @@ public class HMIClient {
 
     public void runClickEvent() {
         if (Minecraft.getInstance().currentScreen != null && Minecraft.getInstance().currentScreen instanceof GuiContainer && !GuiOverlay.searchBoxFocused()) {
-            Config.overlayEnabled = !Config.overlayEnabled;
-            Config.writeConfig();
+            HowManyFoxes.CONFIG.overlayEnabled = !HowManyFoxes.CONFIG.overlayEnabled;
+            HowManyFoxes.forceSaveConfig();
             if (this.overlay != null) {
                 this.overlay.toggle();
             }
@@ -194,7 +194,7 @@ public class HMIClient {
         if (tabs == null) {
             TabUtils.loadTabs(allTabs = new ArrayList<>(), "HMF");
             allTabs.addAll(modTabs);
-            Config.readConfig();
+            //Config.readConfig();
             tabs = Config.orderTabs();
         }
 
