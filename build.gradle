@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'foxloader.dev'
 
 group = 'com.fox2code'
-version = '2.1.0'
+version = '2.1.1'
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
