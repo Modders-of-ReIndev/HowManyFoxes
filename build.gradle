@@ -4,14 +4,14 @@ buildscript {
         maven { url 'https://cdn.fox2code.com/maven' }
     }
     dependencies {
-        classpath('com.fox2code.FoxLoader:dev:2.0-alpha33')
+        classpath('com.fox2code.FoxLoader:dev:2.0-alpha38')
     }
 }
 
 apply plugin: 'foxloader.dev'
 
 group = 'com.fox2code'
-version = '2.1.0'
+version = '2.1.1'
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')

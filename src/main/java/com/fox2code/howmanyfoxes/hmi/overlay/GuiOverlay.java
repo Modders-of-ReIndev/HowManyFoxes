@@ -328,7 +328,7 @@ public class GuiOverlay extends GuiScreen {
                 } else {
                     s = "View All Recipes";
                 }
-            } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && this.buttonTrash.mousePressed(this.mc, mouseX, mouseY)) {
+            } else if (HowManyFoxes.CONFIG.cheatsEnabled && !this.mc.theWorld.isRemote && (this.buttonTrash != null && this.buttonTrash.mousePressed(this.mc, mouseX, mouseY))) {
                 if (inventoryplayer.getCursorStack() == null) {
                     if (shiftHeld) {
                         s = "Clear WHOLE inventory";
