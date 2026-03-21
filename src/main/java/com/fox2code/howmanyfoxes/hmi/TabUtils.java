@@ -41,6 +41,11 @@ public class TabUtils {
       freezingTab.equivalentCraftingStations.add(new ItemStack(Blocks.REFRIDGIFREEZER_ACTIVE));
       guiToBlock.put(GuiContainerRefridgifreezer.class, new ItemStack(Blocks.REFRIDGIFREEZER_IDLE));
 
+      //incinerator tab
+       final Tab incineratorTab = new TabIncinerator(mod);
+       tabList.add(incineratorTab);
+       guiToBlock.put(GuiContainerIncinerator.class, new ItemStack(Blocks.INCINERATOR));
+
       //carpenter table tab
       final Tab carpentryTab = new TabCarpentry(mod);
       tabList.add(carpentryTab);
