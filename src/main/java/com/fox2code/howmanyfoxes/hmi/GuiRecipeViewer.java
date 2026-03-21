@@ -576,7 +576,8 @@ public class GuiRecipeViewer extends GuiContainer<ContainerRecipeViewer> {
       }
 
       Utils.postRender();
-      Utils.disableLighting();
+      //Utils.disableLighting(); //this whole render code is ugly - it switches on and off lightning with mere manipulations
+      //TODO: Remind me to think about rewriting this code a little bit in the nearby... ahem far future
       GL11.glPopMatrix();
       GL11.glPushMatrix();
       GL11.glRotatef(120.0F, 1.0F, 0.0F, 0.0F);
