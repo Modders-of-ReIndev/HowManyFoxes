@@ -4,11 +4,9 @@ import com.fox2code.howmanyfoxes.hmi.Utils;
 import net.minecraft.common.block.Blocks;
 import net.minecraft.common.block.data.Materials;
 import net.minecraft.common.block.tileentity.TileEntityIncinerator;
-import net.minecraft.common.item.Item;
 import net.minecraft.common.item.ItemStack;
 import net.minecraft.common.item.Items;
 import net.minecraft.common.item.children.ItemFood;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,10 +15,6 @@ import java.util.List;
 public class TabIncinerator extends TabWithTexture {
     private final ArrayList<ItemStack> fuels = new ArrayList<>();
     private final ArrayList<ItemStack[]> recipes = new ArrayList<>();
-
-    public static class DumbIncineratorRecord {
-
-    }
 
     public TabIncinerator(String tabCreator) {
         super(
@@ -61,7 +55,7 @@ public class TabIncinerator extends TabWithTexture {
     }
 
     @Override
-    public @NotNull ItemStack getTabItem() {
+    public ItemStack getTabItem() {
         return new ItemStack(Blocks.INCINERATOR);
     }
 
@@ -101,10 +95,11 @@ public class TabIncinerator extends TabWithTexture {
         this.recipes.clear();
 
         if (getUses && (filter != null)) {
-            ItemStack output = this.returnOutput(filter);
-            this.recipes.add(new ItemStack[]{filter.copy(), output});
+            if(TileEntityIncinerator.isItemValidFuel(filter)) {
+                this.recipes.add(new ItemStack[]{filter.copy(), this.returnOutput(filter)});
+            }
         } else if (filter != null) {
-            //TODO: hope that incinerator will have a loot table in the future
+            //TODO: hope that incinerator will have an output chances list in the future
             if (filter.getItemID() == Items.BONE.itemID) this.recipes.addAll(this.collectAllFood(new ItemStack(Items.BONE)));
             if (filter.getItemID() == Items.DYE_POWDER.itemID && filter.getItemDamage() == 15) this.recipes.addAll(this.collectAllFood(new ItemStack(Items.DYE_POWDER, 1, 15)));
             if (filter.getItemID() == Items.COAL.itemID) this.recipes.addAll(this.collectAllItems(new ItemStack(Items.COAL)));
@@ -116,6 +111,7 @@ public class TabIncinerator extends TabWithTexture {
         this.size = this.recipes.size();
     }
 
+    //TODO: Hope that incinerator will have a static method to give an output from input itemstack
     private ItemStack returnOutput(ItemStack input) {
         ItemStack output = new ItemStack(Items.ASH, 1, 0);
         if (input.getItem() instanceof ItemFood) {
@@ -131,7 +127,6 @@ public class TabIncinerator extends TabWithTexture {
         }
         return output;
     }
-
 
     private Collection<ItemStack[]> collectAllFood(ItemStack output) {
         final List<ItemStack[]> list = new ArrayList<>();
